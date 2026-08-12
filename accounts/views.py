@@ -153,7 +153,7 @@ def register_patient(request):
 
         login(request, user)
         messages.success(request, 'Registration successful! Welcome!')
-        return redirect('patient_appointments')
+        return redirect('home')
 
     return render(request, 'register.html', {'insurance_choices': Patient.INSURANCE_CHOICES})
 
