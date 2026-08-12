@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Health Chart{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h2>Health Chart</h2>
+    <p class="subtitle">Visual trends of your health readings</p>
+
+    {% if readings %}
+    <div class="chart-container">
+        <canvas id="healthChart" width="400" height="250"></canvas>
+    </div>
+    {% else %}
+    <p class="empty-state">No readings to display. Add some readings first.</p>
+    {% endif %}
+
+    <div class="back-link">
+        <a href="{% url 'health_dashboard' %}">Back to Health Dashboard</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const readings = [
+    {% for r in readings %}
+    {
+        date: "{{ r.year }}/{{ r.month }}/{{ r.day }}",
+        type: "{{ r.reading_type }}",
+        systolic: {{ r.systolic }},
+        diastolic: {{ r.diastolic }},
+        value: {{ r.value }}
+    },
+    {% endfor %}
+];
+
+const labels = [...new Set(readings.map(r => r.date))];
+const bpReadings = readings.filter(r => r.type === 'blood_pressure');
+const sugarReadings = readings.filter(r => r.type === 'blood_sugar');
+const hrReadings = readings.filter(r => r.type === 'heart_rate');
+
+const datasets = [];
+
+if (bpReadings.length > 0) {
+    datasets.push({
+        label: 'Systolic BP',
+        data: bpReadings.map(r => r.systolic),
+        borderColor: '#e53e3e',
+        backgroundColor: 'rgba(229, 62, 62, 0.1)',
+        tension: 0.1
+    });
+    datasets.push({
+        label: 'Diastolic BP',
+        data: bpReadings.map(r => r.diastolic),
+        borderColor: '#3182ce',
+        backgroundColor: 'rgba(49, 130, 206, 0.1)',
+        tension: 0.1
+    });
+}
+
+if (sugarReadings.length > 0) {
+    datasets.push({
+        label: 'Blood Sugar',
+        data: sugarReadings.map(r => r.value),
+        borderColor: '#d69e2e',
+        backgroundColor: 'rgba(214, 158, 46, 0.1)',
+        tension: 0.1
+    });
+}
+
+if (hrReadings.length > 0) {
+    datasets.push({
+        label: 'Heart Rate',
+        data: hrReadings.map(r => r.value),
+        borderColor: '#38a169',
+        backgroundColor: 'rgba(56, 161, 105, 0.1)',
+        tension: 0.1
+    });
+}
+
+if (datasets.length > 0) {
+    const ctx = document.getElementById('healthChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Health Metrics Over Time'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

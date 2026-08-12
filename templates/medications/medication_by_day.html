@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Medications by Day{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Medications by Day</h2>
+    <p class="subtitle">Select a day to see your medications and mark them as taken</p>
+
+    <form method="get" class="login-form">
+        <div class="form-group">
+            <label for="day">Select Day</label>
+            <select id="day" name="day" onchange="this.form.submit()">
+                <option value="">Choose a day</option>
+                {% for value, label in days %}
+                <option value="{{ value }}" {% if selected_day == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    {% if selected_day %}
+        {% if medications %}
+        <div class="med-list">
+            {% for med in medications %}
+            <div class="med-card {% if med.taken %}med-taken{% endif %}">
+                <div class="med-info">
+                    <div class="med-name">
+                        {% if med.taken %}
+                        <span class="check-icon">&#10004;</span>
+                        {% else %}
+                        <span class="unchecked-icon">&#9744;</span>
+                        {% endif %}
+                        {{ med.name }}
+                    </div>
+                    <div class="med-detail"><span class="label">Dosage:</span> {{ med.dosage }}</div>
+                    <div class="med-detail"><span class="label">Time:</span> {{ med.time }}</div>
+                    <div class="med-detail"><span class="label">Times per day:</span> {{ med.times_per_day }}</div>
+                </div>
+                <div class="med-actions">
+                    <a href="{% url 'medication_toggle_taken' med.id %}" class="btn btn-sm {% if med.taken %}btn-secondary{% else %}btn-success{% endif %}">
+                        {% if med.taken %}Undo{% else %}Take{% endif %}
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-state">No medications scheduled for this day.</p>
+        {% endif %}
+    {% endif %}
+
+    <div class="back-link">
+        <a href="{% url 'medication_list' %}">Back to Medications</a>
+    </div>
+</div>
+{% endblock %}

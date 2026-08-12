@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Medication{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Add Medication</h2>
+    <p class="subtitle">Enter medication details and select days</p>
+
+    <form method="post" class="login-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Medication Name</label>
+            <input type="text" autocomplete="off" id="name" name="name" required placeholder="e.g., Metformin">
+        </div>
+        <div class="form-group">
+            <label for="dosage">Dosage</label>
+            <input type="text" autocomplete="off" id="dosage" name="dosage" required placeholder="e.g., 500mg">
+        </div>
+        <div class="form-group">
+            <label for="time">Time (HH:MM)</label>
+            <input type="time" autocomplete="off" id="time" name="time" required>
+        </div>
+        <div class="form-group">
+            <label for="times_per_day">Times per Day</label>
+            <input type="number" autocomplete="off" id="times_per_day" name="times_per_day" min="1" max="10" value="1" required>
+        </div>
+        <div class="form-group">
+            <label>Select Days</label>
+            <div class="days-checkboxes">
+                {% for value, label in days %}
+                <label class="day-checkbox">
+                    <input type="checkbox" name="days_of_week" value="{{ value }}">
+                    <span>{{ label }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Add Medication</button>
+    </form>
+
+    <div class="back-link">
+        <a href="{% url 'medication_list' %}">Back to Medications</a>
+    </div>
+</div>
+{% endblock %}
+

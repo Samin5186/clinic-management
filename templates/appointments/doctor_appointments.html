@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Doctor Appointments{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h2>My Appointments</h2>
+    <p class="subtitle">Dr. {{ doctor.name }} - Medical No: {{ doctor.medical_number }}</p>
+
+    {% if appointments %}
+    <div class="appointment-list">
+        {% for appt in appointments %}
+        <div class="appointment-card">
+            <div class="appointment-info">
+                <div class="appointment-doctor">{{ appt.patient_name }}</div>
+                <div class="appointment-detail">
+                    <span class="label">Phone:</span> {{ appt.patient_phone }}
+                </div>
+                <div class="appointment-detail">
+                    <span class="label">Date:</span> {{ appt.year }}/{{ appt.month }}/{{ appt.day }}
+                </div>
+                <div class="appointment-detail">
+                    <span class="label">Time:</span> {{ appt.hour }}:00
+                </div>
+                <div class="appointment-detail">
+                    <span class="label">Reason:</span> {{ appt.reason }}
+                </div>
+                <div class="appointment-detail">
+                    <span class="label">Insurance:</span> {{ appt.patient.get_insurance_display_name }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No appointments scheduled.</p>
+    {% endif %}
+
+    <div class="back-link">
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</div>
+{% endblock %}

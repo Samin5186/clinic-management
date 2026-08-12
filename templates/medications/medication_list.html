@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}My Medications{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>My Medications</h2>
+    <p class="subtitle">View and manage your medications</p>
+
+    {% if medications %}
+    <div class="med-list">
+        {% for med in medications %}
+        <div class="med-card">
+            <div class="med-info">
+                <div class="med-name">{{ med.name }}</div>
+                <div class="med-detail"><span class="label">Dosage:</span> {{ med.dosage }}</div>
+                <div class="med-detail"><span class="label">Time:</span> {{ med.time }}</div>
+                <div class="med-detail"><span class="label">Times per day:</span> {{ med.times_per_day }}</div>
+                <div class="med-detail"><span class="label">Days:</span> {{ med.get_days_display }}</div>
+            </div>
+            <div class="med-actions">
+                <a href="{% url 'medication_delete' med.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this medication?')">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No medications added yet.</p>
+    {% endif %}
+
+    <div class="actions-bar">
+        <a href="{% url 'medication_add' %}" class="btn btn-primary">Add Medication</a>
+        <a href="{% url 'medication_by_day' %}" class="btn btn-secondary">View by Day</a>
+    </div>
+
+    <div class="back-link">
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

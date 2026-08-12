@@ -1,0 +1,38 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('select-role/', views.select_role, name='select_role'),
+    path('login/', views.login_view, name='login'),
+    path('register/', views.register_patient, name='register'),
+    path('logout/', views.logout_view, name='logout'),
+
+    # Patient appointment URLs
+    path('appointments/', views.patient_appointments, name='patient_appointments'),
+    path('appointments/book/', views.appointment_book, name='appointment_book'),
+    path('appointments/cancel/<int:appointment_id>/', views.appointment_cancel, name='appointment_cancel'),
+    path('appointments/delete/<int:appointment_id>/', views.appointment_delete, name='appointment_delete'),
+
+    # Doctor appointment URLs
+    path('doctor/appointments/', views.doctor_appointments, name='doctor_appointments'),
+
+    # Admin URLs
+    path('admin-panel/', views.admin_panel, name='admin_panel'),
+    path('admin-panel/add-doctor/', views.admin_add_doctor, name='admin_add_doctor'),
+    path('admin-panel/promote/', views.admin_promote_user, name='admin_promote_user'),
+    path('admin-panel/demote/', views.admin_demote_user, name='admin_demote_user'),
+
+    # Medication URLs
+    path('medications/', views.medication_list, name='medication_list'),
+    path('medications/add/', views.medication_add, name='medication_add'),
+    path('medications/delete/<int:med_id>/', views.medication_delete, name='medication_delete'),
+    path('medications/toggle/<int:med_id>/', views.medication_toggle_taken, name='medication_toggle_taken'),
+    path('medications/by-day/', views.medication_by_day, name='medication_by_day'),
+
+    # Health URLs
+    path('health/', views.health_dashboard, name='health_dashboard'),
+    path('health/add/', views.health_add, name='health_add'),
+    path('health/delete/<int:reading_id>/', views.health_delete, name='health_delete'),
+    path('health/chart/', views.health_chart, name='health_chart'),
+]

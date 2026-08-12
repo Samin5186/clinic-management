@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Health Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Health Dashboard</h2>
+    <p class="subtitle">Your health readings history</p>
+
+    {% if readings %}
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in readings %}
+            <tr>
+                <td>{{ r.year }}/{{ r.month }}/{{ r.day }}</td>
+                <td>{{ r.hour }}:00</td>
+                <td>{{ r.get_reading_type_display }}</td>
+                <td>
+                    {% if r.reading_type == 'blood_pressure' %}
+                    {{ r.systolic }}/{{ r.diastolic }}
+                    {% elif r.reading_type == 'blood_sugar' %}
+                    {{ r.value }} mg/dL
+                    {% else %}
+                    {{ r.value }} BPM
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'health_delete' r.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this reading?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No health readings recorded yet.</p>
+    {% endif %}
+
+    <div class="actions-bar">
+        <a href="{% url 'health_add' %}" class="btn btn-primary">Add Reading</a>
+        <a href="{% url 'health_chart' %}" class="btn btn-secondary">View Chart</a>
+    </div>
+
+    <div class="back-link">
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Health Reading{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Add Health Reading</h2>
+    <p class="subtitle">Record your health metrics</p>
+
+    <form method="post" class="login-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="reading_type">Reading Type</label>
+            <select id="reading_type" name="reading_type" required onchange="toggleFields()">
+                <option value="">Select Type</option>
+                {% for value, label in types %}
+                <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="bp-fields" style="display:none;">
+            <div class="form-group">
+                <label for="systolic">Systolic (High)</label>
+                <input type="number" autocomplete="off" id="systolic" name="systolic" placeholder="e.g., 120">
+            </div>
+            <div class="form-group">
+                <label for="diastolic">Diastolic (Low)</label>
+                <input type="number" autocomplete="off" id="diastolic" name="diastolic" placeholder="e.g., 80">
+            </div>
+        </div>
+        <div id="value-field" style="display:none;">
+            <div class="form-group">
+                <label for="value" id="value-label">Value</label>
+                <input type="number" autocomplete="off" id="value" name="value" placeholder="e.g., 90">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Add Reading</button>
+    </form>
+
+    <div class="back-link">
+        <a href="{% url 'health_dashboard' %}">Back to Health Dashboard</a>
+    </div>
+</div>
+
+<script>
+function toggleFields() {
+    var type = document.getElementById('reading_type').value;
+    var bpFields = document.getElementById('bp-fields');
+    var valueField = document.getElementById('value-field');
+    var valueLabel = document.getElementById('value-label');
+
+    if (type === 'blood_pressure') {
+        bpFields.style.display = 'block';
+        valueField.style.display = 'none';
+    } else if (type === 'blood_sugar') {
+        bpFields.style.display = 'none';
+        valueField.style.display = 'block';
+        valueLabel.textContent = 'Blood Sugar (mg/dL)';
+    } else if (type === 'heart_rate') {
+        bpFields.style.display = 'none';
+        valueField.style.display = 'block';
+        valueLabel.textContent = 'Heart Rate (BPM)';
+    } else {
+        bpFields.style.display = 'none';
+        valueField.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Patient Registration{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Patient Registration</h2>
+    <p class="subtitle">Please fill in all fields to create your account</p>
+    <form method="post" class="login-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" autocomplete="off" id="first_name" name="first_name" required placeholder="e.g., Ali" value="{{ form_data.first_name|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" autocomplete="off" id="last_name" name="last_name" required placeholder="e.g., Rezaei" value="{{ form_data.last_name|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" autocomplete="off" id="age" name="age" required min="1" max="150" placeholder="e.g., 30" value="{{ form_data.age|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number (11 digits starting with 09)</label>
+            <input type="text" autocomplete="off" id="phone" name="phone" required maxlength="11" minlength="11" pattern="09\d{9}" placeholder="09xxxxxxxxx" value="{{ form_data.phone|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" autocomplete="off" id="email" name="email" required placeholder="email@example.com" value="{{ form_data.email|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="insurance">Insurance</label>
+            <select id="insurance" name="insurance" required>
+                <option value="">Select Insurance</option>
+                {% for value, label in insurance_choices %}
+                <option value="{{ value }}" {% if form_data.insurance == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="password1">Password (5 digits)</label>
+            <input type="password" autocomplete="off" id="password1" name="password1" required maxlength="5" pattern="\d{5}" placeholder="e.g., 12345">
+        </div>
+        <div class="form-group">
+            <label for="password2">Confirm Password</label>
+            <input type="password" autocomplete="off" id="password2" name="password2" required maxlength="5" pattern="\d{5}" placeholder="Re-enter your password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Register</button>
+    </form>
+    <p class="form-footer">Already have an account? <a href="{% url 'login' %}?role=patient">Login here</a></p>
+    <div class="back-link">
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
+

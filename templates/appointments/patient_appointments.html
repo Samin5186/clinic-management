@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}My Appointments{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>My Appointments</h2>
+    <p class="subtitle">Your scheduled and past appointments</p>
+
+    <div class="section">
+        <h3 class="section-title center">Upcoming Appointments</h3>
+        {% if appointments %}
+        <div class="appointment-list">
+            {% for appt in appointments %}
+            <div class="appointment-card">
+                <div class="appointment-info">
+                    <div class="appointment-doctor">Dr. {{ appt.doctor.name }}</div>
+                    <div class="appointment-detail">
+                        <span class="label">Date:</span> {{ appt.year }}/{{ appt.month }}/{{ appt.day }}
+                    </div>
+                    <div class="appointment-detail">
+                        <span class="label">Time:</span> {{ appt.hour }}:00
+                    </div>
+                    <div class="appointment-detail">
+                        <span class="label">Reason:</span> {{ appt.reason }}
+                    </div>
+                </div>
+                <div class="appointment-actions">
+                    <a href="{% url 'appointment_cancel' appt.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this appointment?')">Cancel</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-state">No upcoming appointments. <a href="{% url 'appointment_book' %}">Book one now</a></p>
+        {% endif %}
+    </div>
+
+    <div class="actions-bar">
+        <a href="{% url 'appointment_book' %}" class="btn btn-primary">Book New Appointment</a>
+    </div>
+
+    {% if cancelled %}
+    <div class="section">
+        <h3 class="section-title center" style="color: #dc2626;">Cancelled Appointments</h3>
+        <div class="appointment-list">
+            {% for appt in cancelled %}
+            <div class="appointment-card cancelled">
+                <div class="appointment-info">
+                    <div class="appointment-doctor">Dr. {{ appt.doctor.name }}</div>
+                    <div class="appointment-detail">
+                        <span class="label">Date:</span> {{ appt.year }}/{{ appt.month }}/{{ appt.day }}
+                    </div>
+                    <div class="appointment-detail">
+                        <span class="label">Time:</span> {{ appt.hour }}:00
+                    </div>
+                    <div class="appointment-detail">
+                        <span class="label">Reason:</span> {{ appt.reason }}
+                    </div>
+                </div>
+                <div class="appointment-actions">
+                    <a href="{% url 'appointment_delete' appt.id %}" class="btn btn-delete btn-sm" onclick="return confirm('Permanently delete this appointment?')">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="back-link">
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Promote User{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h1>Promote User to Admin</h1>
+
+    <div class="admin-section">
+        <h2>Select a User to Promote</h2>
+        {% if regular_users %}
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in regular_users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td><span class="badge role-{{ user.role }}">{{ user.role }}</span></td>
+                    <td>
+                        <form method="post" style="display:inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" class="btn btn-sm btn-promote" onclick="return confirm('Promote {{ user.username }} to admin?')">Promote</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">No regular users found.</p>
+        {% endif %}
+    </div>
+
+    <div class="back-link">
+        <a href="{% url 'admin_panel' %}">Back to Admin Panel</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Book Appointment</h2>
+    <p class="subtitle">Select a doctor and available time</p>
+
+    {% if not selected_doctor %}
+    <div class="section">
+        <h3 class="section-title">Select a Doctor</h3>
+        {% if doctors %}
+        <div class="doctor-list">
+            {% for doc in doctors %}
+            <a href="?doctor_id={{ doc.id }}" class="doctor-card">
+                <div class="doctor-avatar">👨‍⚕️</div>
+                <div class="doctor-info">
+                    <div class="doctor-name">Dr. {{ doc.name }}</div>
+                    <div class="doctor-number">Medical No: {{ doc.medical_number }}</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-state">No doctors available.</p>
+        {% endif %}
+    </div>
+    {% else %}
+
+    <div class="section">
+        <h3 class="section-title">Dr. {{ selected_doctor.name }}</h3>
+        <p class="doctor-selected">Medical No: {{ selected_doctor.medical_number }}</p>
+    </div>
+
+    <div class="section">
+        <h3 class="section-title">Available Times - {{ selected_year }}/{{ selected_month }}/{{ selected_day }}</h3>
+        <p class="legend">
+            <span class="legend-item"><span class="dot green"></span> Available</span>
+            <span class="legend-item"><span class="dot red"></span> Booked</span>
+        </p>
+        <div class="time-slots">
+            {% for hour in hours %}
+            <div class="time-slot {% if hour in booked_hours %}booked{% else %}available{% endif %}">
+                {% if hour in booked_hours %}
+                <span class="slot-icon">&#10006;</span>
+                {% else %}
+                <span class="slot-icon">&#10004;</span>
+                {% endif %}
+                <span class="slot-time">{{ hour }}:00</span>
+                {% if hour in booked_hours %}
+                <span class="slot-status-text">Booked</span>
+                {% else %}
+                <span class="slot-status-text">Available</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section">
+        <h3 class="section-title">Book a Time Slot</h3>
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            <input type="hidden" name="doctor_id" value="{{ selected_doctor.id }}">
+            <input type="hidden" name="day" value="{{ selected_day }}">
+            <input type="hidden" name="month" value="{{ selected_month }}">
+            <input type="hidden" name="year" value="{{ selected_year }}">
+            <div class="form-group">
+                <label for="hour">Select Hour</label>
+                <select id="hour" name="hour" required>
+                    <option value="">Choose a time</option>
+                    {% for hour in hours %}
+                    {% if hour not in booked_hours %}
+                    <option value="{{ hour }}">{{ hour }}:00 - {{ hour|add:1 }}:00</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="reason">Reason for Visit</label>
+                <input type="text" autocomplete="off" id="reason" name="reason" required placeholder="Describe your reason for visit">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Confirm Booking</button>
+        </form>
+    </div>
+
+    <div class="back-link">
+        <a href="{% url 'appointment_book' %}">Back to Doctor List</a>
+    </div>
+    {% endif %}
+
+    <div class="back-link">
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
+

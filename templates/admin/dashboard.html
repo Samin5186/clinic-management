@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h1>Admin Dashboard</h1>
+
+    <div class="admin-section">
+        <div class="section-header">
+            <h2>Doctors</h2>
+            <a href="{% url 'admin_add_doctor' %}" class="btn btn-primary btn-sm">Add Doctor</a>
+        </div>
+        {% if doctors %}
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Medical Number</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doc in doctors %}
+                <tr>
+                    <td>Dr. {{ doc.name }}</td>
+                    <td>{{ doc.medical_number }}</td>
+                    <td><span class="badge">{{ doc.appointments.filter.count }} appointments</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">No doctors registered yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="admin-section">
+        <h2>All Appointments</h2>
+        {% if appointments %}
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appt in appointments %}
+                <tr>
+                    <td>{{ appt.patient_name }}</td>
+                    <td>Dr. {{ appt.doctor.name }}</td>
+                    <td>{{ appt.year }}/{{ appt.month }}/{{ appt.day }}</td>
+                    <td>{{ appt.hour }}:00</td>
+                    <td>{{ appt.reason }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">No appointments scheduled.</p>
+        {% endif %}
+    </div>
+
+    <div class="admin-section">
+        <div class="section-header">
+            <h2>Users</h2>
+        </div>
+        {% if regular_users %}
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in regular_users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td><span class="badge role-{{ user.role }}">{{ user.role }}</span></td>
+                    <td>
+                        <form method="post" action="{% url 'admin_promote_user' %}" style="display:inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" class="btn btn-sm btn-promote" onclick="return confirm('Promote {{ user.username }} to admin?')">Promote</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty-state">No regular users found.</p>
+        {% endif %}
+    </div>
+
+    {% if admin_users %}
+    <div class="admin-section">
+        <h2>Admin Users</h2>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in admin_users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        <form method="post" action="{% url 'admin_demote_user' %}" style="display:inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Remove admin from {{ user.username }}?')">Remove Admin</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    <div class="back-link">
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
+
