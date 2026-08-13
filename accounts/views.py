@@ -551,7 +551,10 @@ def medication_toggle_taken(request, med_id):
         taken_days.append(day)
     med.taken_days = ','.join(d for d in taken_days if d)
     med.save()
-    return redirect('medication_by_day' + (f'?day={day}' if day else ''))
+    url = reverse('medication_by_day')
+    if day:
+        url += f'?day={day}'
+    return redirect(url)
 
 
 @login_required
