@@ -160,7 +160,7 @@ class Medication(models.Model):
     day = models.IntegerField()
     month = models.IntegerField()
     year = models.IntegerField()
-    taken = models.BooleanField(default=False)
+    taken_days = models.CharField(max_length=100, default='', blank=True, help_text='Comma-separated weekdays the dose was taken')
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property

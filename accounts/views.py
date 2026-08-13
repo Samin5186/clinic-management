@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.urls import reverse
 from .models import User, Doctor, Patient, Appointment, Medication, HealthReading
 
 
@@ -542,9 +543,15 @@ def medication_toggle_taken(request, med_id):
 
     patient = request.user.patient_profile
     med = get_object_or_404(Medication, id=med_id, patient=patient)
-    med.taken = not med.taken
+    day = request.GET.get('day', '')
+    taken_days = med.taken_days.split(',') if med.taken_days else []
+    if day in taken_days:
+        taken_days.remove(day)
+    elif day:
+        taken_days.append(day)
+    med.taken_days = ','.join(d for d in taken_days if d)
     med.save()
-    return redirect('medication_by_day')
+    return redirect('medication_by_day' + (f'?day={day}' if day else ''))
 
 
 @login_required
@@ -560,6 +567,9 @@ def medication_by_day(request):
     if selected_day:
         all_meds = Medication.objects.filter(patient=patient).order_by('time')
         medications = [m for m in all_meds if selected_day in m.days_of_week.split(',')]
+        for m in medications:
+            m.is_taken = selected_day in (m.taken_days.split(',') if m.taken_days else [])
+            m.toggle_url = f"{reverse('medication_toggle_taken', args=[m.id])}?day={selected_day}"
 
     return render(request, 'medications/medication_by_day.html', {
         'patient': patient,
