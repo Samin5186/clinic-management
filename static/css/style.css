@@ -690,6 +690,25 @@ body {
     pointer-events: none;
 }
 
+.user-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.user-actions form {
+    display: block;
+    width: 100%;
+    margin: 0;
+}
+
+.user-actions .btn {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
 .btn-sm {
     padding: 5px 10px;
     font-size: 0.75rem;
