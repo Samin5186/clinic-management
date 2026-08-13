@@ -544,7 +544,7 @@ def medication_toggle_taken(request, med_id):
     patient = request.user.patient_profile
     med = get_object_or_404(Medication, id=med_id, patient=patient)
     day = request.GET.get('day', '')
-    taken_days = med.taken_days.split(',') if med.taken_days else []
+    taken_days = (med.taken_days or '').split(',')
     if day in taken_days:
         taken_days.remove(day)
     elif day:
