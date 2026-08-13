@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin-panel/add-doctor/', views.admin_add_doctor, name='admin_add_doctor'),
     path('admin-panel/promote/', views.admin_promote_user, name='admin_promote_user'),
     path('admin-panel/demote/', views.admin_demote_user, name='admin_demote_user'),
+    path('admin-panel/remove-user/', views.admin_remove_user, name='admin_remove_user'),
 
     # Medication URLs
     path('medications/', views.medication_list, name='medication_list'),

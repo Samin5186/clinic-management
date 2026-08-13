@@ -33,7 +33,7 @@
             <tbody>
                 {% for doc in doctors %}
                 <tr>
-                    <td>Dr. {{ doc.name }}</td>
+                    <td class="truncated" title="Dr. {{ doc.name }}">Dr. {{ doc.name }}</td>
                     <td>{{ doc.medical_number }}</td>
                     <td><span class="badge">{{ doc.appointments.filter.count }} appointments</span></td>
                 </tr>
@@ -61,11 +61,11 @@
             <tbody>
                 {% for appt in appointments %}
                 <tr>
-                    <td>{{ appt.patient_name }}</td>
-                    <td>Dr. {{ appt.doctor.name }}</td>
+                    <td class="truncated" title="{{ appt.patient_name }}">{{ appt.patient_name }}</td>
+                    <td class="truncated" title="Dr. {{ appt.doctor.name }}">Dr. {{ appt.doctor.name }}</td>
                     <td>{{ appt.year }}/{{ appt.month }}/{{ appt.day }}</td>
                     <td>{{ appt.hour }}:00</td>
-                    <td>{{ appt.reason }}</td>
+                    <td class="truncated" title="{{ appt.reason }}">{{ appt.reason }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -91,13 +91,18 @@
             <tbody>
                 {% for user in regular_users %}
                 <tr>
-                    <td>{{ user.username }}</td>
+                    <td class="truncated" title="{{ user.username }}">{{ user.username }}</td>
                     <td><span class="badge role-{{ user.role }}">{{ user.role }}</span></td>
                     <td>
                         <form method="post" action="{% url 'admin_promote_user' %}" style="display:inline">
                             {% csrf_token %}
                             <input type="hidden" name="user_id" value="{{ user.id }}">
                             <button type="submit" class="btn btn-sm btn-promote" onclick="return confirm('Promote {{ user.username }} to admin?')">Promote</button>
+                        </form>
+                        <form method="post" action="{% url 'admin_remove_user' %}" style="display:inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Remove {{ user.username }} from the site?')">Remove</button>
                         </form>
                     </td>
                 </tr>
@@ -122,7 +127,7 @@
             <tbody>
                 {% for user in admin_users %}
                 <tr>
-                    <td>{{ user.username }}</td>
+                    <td class="truncated" title="{{ user.username }}">{{ user.username }}</td>
                     <td>
                         <form method="post" action="{% url 'admin_demote_user' %}" style="display:inline">
                             {% csrf_token %}

@@ -419,6 +419,31 @@ def admin_demote_user(request):
     return redirect('admin_panel')
 
 
+@login_required
+def admin_remove_user(request):
+    if not request.user.is_admin_user:
+        messages.error(request, 'Access denied. Admins only.')
+        return redirect('home')
+
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+
+        try:
+            user = User.objects.get(id=user_id, is_admin_user=False)
+            if user.username == 'sam':
+                messages.error(request, 'Cannot remove the main admin.')
+            else:
+                username = user.username
+                user.delete()
+                messages.success(request, f'User "{username}" removed from the site.')
+        except User.DoesNotExist:
+            messages.error(request, 'User not found.')
+
+        return redirect('admin_panel')
+
+    return redirect('admin_panel')
+
+
 # ==================== Medication Views ====================
 
 @login_required
