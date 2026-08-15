@@ -8,6 +8,14 @@ from .models import User, Doctor, Patient, Appointment, Medication, HealthReadin
 
 
 def home(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    return render(request, 'landing.html')
+
+
+def dashboard(request):
+    if not request.user.is_authenticated:
+        return redirect('home')
     return render(request, 'home.html')
 
 

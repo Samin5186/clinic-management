@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Clinic Management System{% endblock %}
+
+{% block content %}
+<div class="landing-page">
+    <header class="landing-header">
+        <div class="logo-section">
+            <svg width="80" height="80" viewBox="0 0 100 100">
+                <rect x="10" y="10" width="80" height="80" rx="15" fill="#2563eb" opacity="0.1"/>
+                <rect x="42" y="20" width="16" height="50" rx="3" fill="#2563eb"/>
+                <rect x="25" y="42" width="50" height="16" rx="3" fill="#2563eb"/>
+                <circle cx="50" cy="85" r="8" fill="#2563eb" opacity="0.5"/>
+            </svg>
+            <h1>Clinic Management System</h1>
+        </div>
+    </header>
+
+    <main class="landing-main">
+        <section class="hero">
+            <h2>Manage Your Clinic Efficiently</h2>
+            <p class="hero-subtitle">A complete digital solution for patients, doctors, and clinic administrators</p>
+            <div class="hero-actions">
+                <a href="{% url 'select_role' %}" class="btn btn-primary btn-lg">Get Started</a>
+                <a href="#features" class="btn btn-secondary btn-lg">Learn More</a>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h3>Features</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h4>Appointment Booking</h4>
+                    <p>Patients can easily book, view, and cancel appointments with real-time availability</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💊</div>
+                    <h4>Medication Tracking</h4>
+                    <p>Daily medication reminders with per-day tracking and taken/undo functionality</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h4>Health Monitoring</h4>
+                    <p>Track blood pressure, blood sugar, heart rate with interactive charts</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏥</div>
+                    <h4>Insurance Support</h4>
+                    <p>Support for 13 Iranian insurance providers with automatic display</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h4>Secure & Private</h4>
+                    <p>End-to-end encryption for sensitive medical data with Fernet encryption</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍⚕️</div>
+                    <h4>Multi-Role Access</h4>
+                    <p>Separate dashboards for patients, doctors, and administrators</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h3>Ready to get started?</h3>
+            <p>Join thousands of patients and doctors using our clinic management system</p>
+            <a href="{% url 'select_role' %}" class="btn btn-primary btn-lg">Start Now</a>
+        </section>
+    </main>
+
+    <footer class="landing-footer">
+        <p>&copy; 2025 Clinic Management System. All rights reserved.</p>
+    </footer>
+</div>
+{% endblock %}
