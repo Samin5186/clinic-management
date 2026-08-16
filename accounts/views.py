@@ -9,6 +9,12 @@ from .models import User, Doctor, Patient, Appointment, Medication, HealthReadin
 
 def home(request):
     if request.user.is_authenticated:
+        if request.user.role == 'patient':
+            return redirect('patient_appointments')
+        elif request.user.role == 'doctor':
+            return redirect('doctor_appointments')
+        elif request.user.is_admin_user:
+            return redirect('admin_panel')
         return redirect('dashboard')
     return render(request, 'landing.html')
 
@@ -16,85 +22,61 @@ def home(request):
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('home')
-    return render(request, 'home.html')
-
-
-def select_role(request):
-    return render(request, 'select_role.html')
+    if request.user.role == 'patient':
+        return redirect('patient_appointments')
+    elif request.user.role == 'doctor':
+        return redirect('doctor_appointments')
+    elif request.user.is_admin_user:
+        return redirect('admin_panel')
+    return redirect('home')
 
 
 def login_view(request):
-    role = request.GET.get('role', '')
-
     if request.method == 'POST':
-        role = request.POST.get('role', '')
+        identifier = request.POST.get('identifier', '').strip()
+        password = request.POST.get('password', '').strip()
 
-        if role == 'doctor':
-            name = request.POST.get('name', '').strip()
-            medical_number = request.POST.get('medical_number', '').strip()
+        if not identifier or not password:
+            messages.error(request, 'Please fill in all fields.')
+            return render(request, 'login.html')
 
-            if not name or not medical_number:
-                messages.error(request, 'Please fill in all fields.')
-                return render(request, 'login.html', {'role': role})
+        # Try admin login first (username + password)
+        user = authenticate(request, username=identifier, password=password)
+        if user and user.is_admin_user:
+            login(request, user)
+            return redirect('admin_panel')
 
-            if len(medical_number) != 4 or not medical_number.isdigit():
-                messages.error(request, 'Medical number must be exactly 4 digits.')
-                return render(request, 'login.html', {'role': role})
+        # Try doctor login (username = email, password = medical_number)
+        try:
+            doctor = Doctor.objects.get(user__username=identifier)
+            if doctor.user.check_password(password):
+                login(request, doctor.user)
+                return redirect('doctor_appointments')
+        except Doctor.DoesNotExist:
+            pass
 
-            try:
-                doctor = Doctor.objects.get(medical_number=medical_number)
-                if doctor.name.strip().lower() == name.strip().lower():
-                    login(request, doctor.user)
-                    return redirect('doctor_appointments')
-                else:
-                    messages.error(request, 'Name does not match the medical number.')
-            except Doctor.DoesNotExist:
-                messages.error(request, 'Doctor not found with this medical number.')
+        # Try patient login (email/phone + 5-digit password)
+        patients = Patient.objects.all()
+        matched_patient = None
+        for p in patients:
+            if (p.email == identifier or p.phone == identifier) and p.password_5digit == password:
+                matched_patient = p
+                break
 
-        elif role == 'patient':
-            identifier = request.POST.get('identifier', '').strip()
-            password = request.POST.get('password', '').strip()
+        if matched_patient:
+            login(request, matched_patient.user)
+            return redirect('patient_appointments')
 
-            if not identifier or not password:
-                messages.error(request, 'Please fill in all fields.')
-                return render(request, 'login.html', {'role': role})
+        # Try admin with username (in case identifier is username)
+        user = authenticate(request, username=identifier, password=password)
+        if user and user.is_admin_user:
+            login(request, user)
+            return redirect('admin_panel')
 
-            if len(password) != 5 or not password.isdigit():
-                messages.error(request, 'Password must be exactly 5 digits.')
-                return render(request, 'login.html', {'role': role})
+        messages.error(request, 'Invalid credentials. Please check your credentials and try again.')
+        return render(request, 'login.html')
 
-            patients = Patient.objects.all()
-            matched_patient = None
-            for p in patients:
-                if p.phone == identifier or p.email == identifier:
-                    if p.password_5digit == password:
-                        matched_patient = p
-                        break
-
-            if matched_patient:
-                login(request, matched_patient.user)
-                return redirect('home')
-            else:
-                messages.error(request, 'Invalid phone/email or password.')
-
-        elif role == 'admin':
-            username = request.POST.get('username', '').strip()
-            password = request.POST.get('password', '').strip()
-
-            if not username or not password:
-                messages.error(request, 'Please fill in all fields.')
-                return render(request, 'login.html', {'role': role})
-
-            user = authenticate(request, username=username, password=password)
-            if user and user.is_admin_user:
-                login(request, user)
-                return redirect('home')
-            else:
-                messages.error(request, 'Invalid admin credentials.')
-
-        return render(request, 'login.html', {'role': role})
-
-    return render(request, 'login.html', {'role': role})
+    return render(request, 'login.html')
 
 
 def register_patient(request):
@@ -176,11 +158,11 @@ def logout_view(request):
 
 @login_required
 def patient_appointments(request):
-    if not hasattr(request.user, 'patient_profile'):
+    try:
+        patient = request.user.patient_profile
+    except Patient.DoesNotExist:
         messages.error(request, 'Access denied.')
         return redirect('home')
-
-    patient = request.user.patient_profile
     appointments = Appointment.objects.filter(patient=patient, is_cancelled=False).order_by('year', 'month', 'day', 'hour')
     cancelled = Appointment.objects.filter(patient=patient, is_cancelled=True).order_by('-year', '-month', '-day', '-hour')[:10]
 
@@ -193,7 +175,9 @@ def patient_appointments(request):
 
 @login_required
 def appointment_book(request):
-    if not hasattr(request.user, 'patient_profile'):
+    try:
+        patient = request.user.patient_profile
+    except Patient.DoesNotExist:
         messages.error(request, 'Access denied.')
         return redirect('home')
 

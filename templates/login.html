@@ -14,62 +14,27 @@
     </div>
     {% endif %}
 
-    {% if not role %}
     <h2>Login</h2>
-    <p>Please <a href="{% url 'select_role' %}">select your role</a> first.</p>
-    {% else %}
-    <h2>
-        {% if role == 'patient' %}Patient Login
-        {% elif role == 'doctor' %}Doctor Login
-        {% elif role == 'admin' %}Admin Login
-        {% endif %}
-    </h2>
+    <p class="subtitle">Enter your credentials to access your account</p>
 
     <form method="post" class="login-form">
         {% csrf_token %}
-        <input type="hidden" name="role" value="{{ role }}">
-
-        {% if role == 'doctor' %}
         <div class="form-group">
-            <label for="name">Doctor Name</label>
-            <input type="text" autocomplete="off" id="name" name="name" required placeholder="Enter your name">
-        </div>
-        <div class="form-group">
-            <label for="medical_number">Medical Number (4 digits)</label>
-            <input type="text" autocomplete="off" id="medical_number" name="medical_number" required maxlength="4" pattern="\d{4}" placeholder="e.g., 1234">
-        </div>
-
-        {% elif role == 'patient' %}
-        <div class="form-group">
-            <label for="identifier">Phone Number or Email</label>
-            <input type="text" autocomplete="off" id="identifier" name="identifier" required placeholder="09xxxxxxxxx or email@example.com">
-        </div>
-        <div class="form-group">
-            <label for="password">Password (5 digits)</label>
-            <input type="password" autocomplete="off" id="password" name="password" required maxlength="5" pattern="\d{5}" placeholder="Enter 5-digit password">
-        </div>
-
-        {% elif role == 'admin' %}
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" autocomplete="off" id="username" name="username" required placeholder="Admin username">
+            <label for="identifier">Email, Phone, or Username</label>
+            <input type="text" autocomplete="off" id="identifier" name="identifier" required placeholder="Email, Phone (09xxxxxxxxx), or Username">
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" autocomplete="off" id="password" name="password" required placeholder="Admin password">
+            <input type="password" autocomplete="off" id="password" name="password" required placeholder="Password (5 digits for patients, medical number for doctors)">
         </div>
-        {% endif %}
 
         <button type="submit" class="btn btn-primary btn-block">Login</button>
     </form>
 
-    {% if role == 'patient' %}
-    <p class="form-footer">Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
-    {% endif %}
-    {% endif %}
+    <p class="form-footer">Don't have an account? <a href="{% url 'register' %}">Register as Patient</a></p>
 
     <div class="back-link">
-        <a href="{% url 'select_role' %}">Back to Role Selection</a>
+        <a href="{% url 'home' %}">Back to Home</a>
     </div>
 </div>
 {% endblock %}
