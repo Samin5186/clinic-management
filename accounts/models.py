@@ -36,19 +36,19 @@ class Doctor(models.Model):
 
 class Patient(models.Model):
     INSURANCE_CHOICES = [
-        ('bimeh_salamat', 'Bimeh Salamat Iranian'),
-        ('bimeh_tamin_ejtemaei', 'Bimeh Tamin Ejtemaei'),
-        ('bimeh_niroo_mosallah', 'Bimeh Niroo Mosallah'),
-        ('bimeh_roostaei_ashayer', 'Bimeh Roostaei va Ashayer'),
-        ('bimeh_komite_emdad', 'Bimeh Komite Emdad Emam Khomeini'),
-        ('bimeh_khadamat_darmani', 'Bimeh Khadamat Darmani Karkan Dolat'),
-        ('bimeh_iran', 'Bimeh Iran'),
-        ('bimeh_asia', 'Bimeh Asia'),
-        ('bimeh_dana', 'Bimeh Dana'),
-        ('bimeh_parsian', 'Bimeh Parsian'),
-        ('bimeh_novin', 'Bimeh Novin'),
-        ('bimeh_saman', 'Bimeh Saman'),
-        ('bimeh_razi', 'Bimeh Razi'),
+        ('bimeh_salamat', 'Bimeh Salamat Iranian (Iran Health Insurance)'),
+        ('bimeh_tamin_ejtemaei', 'Social Security Insurance'),
+        ('bimeh_niroo_mosallah', 'Armed Forces Insurance'),
+        ('bimeh_roostaei_ashayer', 'Rural & Nomadic Insurance'),
+        ('bimeh_komite_emdad', 'Imam Khomeini Relief Committee Insurance'),
+        ('bimeh_khadamat_darmani', 'Medical Services Insurance (Gov. Employees)'),
+        ('bimeh_iran', 'Iran Insurance'),
+        ('bimeh_asia', 'Asia Insurance'),
+        ('bimeh_dana', 'Dana Insurance'),
+        ('bimeh_parsian', 'Parsian Insurance'),
+        ('bimeh_novin', 'Novin Insurance'),
+        ('bimeh_saman', 'Saman Insurance'),
+        ('bimeh_razi', 'Razi Insurance'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient_profile')

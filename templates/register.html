@@ -20,11 +20,11 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="first_name">First Name</label>
-            <input type="text" autocomplete="off" id="first_name" name="first_name" required placeholder="e.g., Ali" value="{{ form_data.first_name|default:'' }}">
+            <input type="text" autocomplete="off" id="first_name" name="first_name" required placeholder="e.g., John" value="{{ form_data.first_name|default:'' }}">
         </div>
         <div class="form-group">
             <label for="last_name">Last Name</label>
-            <input type="text" autocomplete="off" id="last_name" name="last_name" required placeholder="e.g., Rezaei" value="{{ form_data.last_name|default:'' }}">
+            <input type="text" autocomplete="off" id="last_name" name="last_name" required placeholder="e.g., Smith" value="{{ form_data.last_name|default:'' }}">
         </div>
         <div class="form-group">
             <label for="age">Age</label>
@@ -57,10 +57,9 @@
         </div>
         <button type="submit" class="btn btn-primary btn-block">Register</button>
     </form>
-    <p class="form-footer">Already have an account? <a href="{% url 'login' %}?role=patient">Login here</a></p>
+    <p class="form-footer">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
     <div class="back-link">
         <a href="{% url 'home' %}">Back to Home</a>
     </div>
 </div>
 {% endblock %}
-
