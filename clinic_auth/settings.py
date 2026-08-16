@@ -75,6 +75,8 @@ AUTH_PASSWORD_VALIDATORS = []
 LANGUAGE_CODE = 'fa-ir'
 TIME_ZONE = 'Asia/Tehran'
 USE_I18N = True
+
+DEFAULT_CHARSET = 'utf-8'
 USE_TZ = True
 
 STATIC_URL = '/static/'
