@@ -1910,10 +1910,72 @@ body {
 /* ============================================
    RESPONSIVE — INNER PAGES
    ============================================ */
+/* ============================================
+   RESPONSIVE — INNER PAGES
+   ============================================ */
 @media (max-width: 600px) {
-    .appointment-card, .med-card { flex-direction: column; align-items: flex-start; }
-    .time-slots { grid-template-columns: repeat(3, 1fr); }
-    .admin-container { margin: 16px 12px; padding: 24px 16px; }
-    .admin-table { font-size: 0.8rem; }
-    .admin-table th, .admin-table td { padding: 8px 10px; }
+    .page-container { margin: 12px 8px; padding: 24px 16px; }
+    .page-container h2 { font-size: 1.4rem; }
+    .page-container .subtitle { font-size: 0.88rem; }
+
+    .appointment-card, .med-card { flex-direction: column; align-items: stretch; gap: 12px; }
+    .appointment-actions, .med-actions { align-self: flex-end; }
+    .time-slots { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+    .admin-container { margin: 12px 8px; padding: 20px 12px; border-radius: 14px; }
+    .admin-container h1 { font-size: 1.5rem; }
+    .admin-container h2 { font-size: 1.1rem; }
+    .admin-table { font-size: 0.75rem; display: block; overflow-x: auto; white-space: nowrap; }
+    .admin-table th, .admin-table td { padding: 8px 8px; }
+
+    /* Dashboard */
+    .dash-nav-inner { padding: 12px 16px; gap: 8px; }
+    .dash-nav-right { gap: 8px; }
+    .dash-user { font-size: 0.8rem; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dash-main { padding: 20px 14px 60px; }
+    .dash-welcome { padding: 28px 20px; flex-direction: column; text-align: center; gap: 16px; }
+    .dash-welcome-art { display: none; }
+    .dash-welcome-text h1 { font-size: 1.4rem; }
+    .dash-welcome-text p { font-size: 0.9rem; }
+    .module-grid { grid-template-columns: 1fr; gap: 14px; }
+    .module-card { padding: 22px 18px; }
+    .module-icon { width: 48px; height: 48px; border-radius: 12px; }
+
+    /* Doctor Dashboard */
+    .doctor-day-header { padding: 14px 16px; flex-wrap: wrap; gap: 8px; }
+    .doctor-day-name { font-size: 1rem; }
+    .doctor-day-count { margin-left: 0; }
+    .doctor-appt-card { flex-direction: column; gap: 10px; padding: 14px 16px; }
+    .doctor-appt-time { align-self: flex-start; font-size: 0.85rem; padding: 6px 10px; }
+    .doctor-appt-name { font-size: 0.95rem; }
+
+    /* Calendar */
+    .calendar-header { gap: 12px; }
+    .cal-month { font-size: 0.95rem; min-width: 140px; }
+    .cal-day { padding: 8px 2px; font-size: 0.78rem; }
+    .calendar-weekdays span { font-size: 0.65rem; }
+    .legend { flex-wrap: wrap; gap: 12px; font-size: 0.82rem; }
+
+    /* Nav */
+    .nav-inner { padding: 12px 16px; }
+    .nav-logo span { font-size: 1rem; }
+
+    /* Login / Register */
+    .login-form input { padding: 12px 14px; font-size: 0.9rem; }
+
+    /* Reminders */
+    .reminders-section { padding: 16px; border-radius: 14px; }
+    .reminder-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .reminder-action { align-self: flex-end; }
+
+    /* Toast */
+    .notif-toast { left: 12px; right: 12px; max-width: none; bottom: 16px; }
+
+    /* Footer */
+    .footer-inner { padding: 40px 16px 24px; gap: 28px; }
+    .footer-links-group { gap: 24px; }
+
+    /* Actions bar */
+    .actions-bar { flex-direction: column; }
+    .actions-bar .btn { min-width: 0; }
 }
