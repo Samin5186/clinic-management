@@ -30,6 +30,7 @@ def patient_dashboard(request):
         patient = request.user.patient_profile
     except Patient.DoesNotExist:
         messages.error(request, 'Patient profile not found. Please contact support.')
+        logout(request)
         return redirect('home')
     today = date.today()
     tomorrow = today + timedelta(days=1)
