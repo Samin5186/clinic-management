@@ -15,7 +15,7 @@
     {% endif %}
 
     <h2>Book Appointment</h2>
-    <p class="subtitle">Select a doctor and available time</p>
+    <p class="subtitle">Select a doctor, pick a day, and choose a time</p>
 
     {% if not selected_doctor %}
     <div class="section">
@@ -44,56 +44,82 @@
     </div>
 
     <div class="section">
-        <h3 class="section-title">Available Times - {{ selected_year }}/{{ selected_month }}/{{ selected_day }}</h3>
+        <h3 class="section-title">Pick a Day</h3>
         <p class="legend">
             <span class="legend-item"><span class="dot green"></span> Available</span>
-            <span class="legend-item"><span class="dot red"></span> Booked</span>
+            <span class="legend-item"><span class="dot gray"></span> Weekend</span>
+            <span class="legend-item"><span class="dot dark"></span> Past</span>
         </p>
-        <div class="time-slots">
-            {% for hour in hours %}
-            <div class="time-slot {% if hour in booked_hours %}booked{% else %}available{% endif %}">
-                {% if hour in booked_hours %}
-                <span class="slot-icon">&#10006;</span>
-                {% else %}
-                <span class="slot-icon">&#10004;</span>
-                {% endif %}
-                <span class="slot-time">{{ hour }}:00</span>
-                {% if hour in booked_hours %}
-                <span class="slot-status-text">Booked</span>
-                {% else %}
-                <span class="slot-status-text">Available</span>
-                {% endif %}
+        <div class="calendar-header">
+            <a href="?doctor_id={{ selected_doctor.id }}&month={{ prev_month }}&year={{ prev_year }}" class="cal-nav-btn">&larr;</a>
+            <span class="cal-month">{{ month_name }} {{ selected_year }}</span>
+            <a href="?doctor_id={{ selected_doctor.id }}&month={{ next_month }}&year={{ next_year }}" class="cal-nav-btn">&rarr;</a>
+        </div>
+        <div class="calendar-weekdays">
+            <span>Sat</span><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
+        </div>
+        <div class="calendar-grid">
+            {% for week in month_days %}
+            {% for d in week %}
+            {% if d == 0 %}
+            <div class="cal-day empty"></div>
+            {% else %}
+            {% with item=calendar_weekdays|dictsort:"day"|slice:":1" %}
+            {% endwith %}
+            <div class="cal-day {% for cw in calendar_weekdays %}{% if cw.day == d %}{% if not cw.is_weekday %}weekend{% elif cw.is_past %}past{% elif cw.is_selected %}selected{% elif cw.is_today %}today{% else %}available{% endif %}{% endif %}{% endfor %}"
+                 {% for cw in calendar_weekdays %}{% if cw.day == d and cw.is_weekday and not cw.is_past %}onclick="pickDay({{ d }})"{% endif %}{% endfor %}>
+                {{ d }}
             </div>
+            {% endif %}
+            {% endfor %}
             {% endfor %}
         </div>
     </div>
 
-    <div class="section">
-        <h3 class="section-title">Book a Time Slot</h3>
-        <form method="post" class="login-form">
-            {% csrf_token %}
-            <input type="hidden" name="doctor_id" value="{{ selected_doctor.id }}">
-            <input type="hidden" name="day" value="{{ selected_day }}">
-            <input type="hidden" name="month" value="{{ selected_month }}">
-            <input type="hidden" name="year" value="{{ selected_year }}">
-            <div class="form-group">
-                <label for="hour">Select Hour</label>
-                <select id="hour" name="hour" required>
-                    <option value="">Choose a time</option>
-                    {% for hour in hours %}
-                    {% if hour not in booked_hours %}
-                    <option value="{{ hour }}">{{ hour }}:00 - {{ hour|add:1 }}:00</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
+    {% if selected_day %}
+    <form method="post" class="login-form" id="bookForm">
+        {% csrf_token %}
+        <input type="hidden" name="doctor_id" value="{{ selected_doctor.id }}">
+        <input type="hidden" name="day" value="{{ selected_day }}">
+        <input type="hidden" name="month" value="{{ selected_month }}">
+        <input type="hidden" name="year" value="{{ selected_year }}">
+        <input type="hidden" id="selected_hour" name="hour" value="">
+
+        <div class="section">
+            <h3 class="section-title">Available Times - {{ month_name }} {{ selected_day }}</h3>
+            <p class="legend">
+                <span class="legend-item"><span class="dot green"></span> Available</span>
+                <span class="legend-item"><span class="dot red"></span> Booked</span>
+            </p>
+            <div class="time-slots">
+                {% for hour in hours %}
+                {% if hour in booked_hours %}
+                <div class="time-slot booked">
+                    <span class="slot-icon">&#10006;</span>
+                    <span class="slot-time">{{ hour }}:00</span>
+                    <span class="slot-status-text">Booked</span>
+                </div>
+                {% else %}
+                <div class="time-slot available" onclick="selectTime(this, {{ hour }})">
+                    <span class="slot-icon">&#10004;</span>
+                    <span class="slot-time">{{ hour }}:00</span>
+                    <span class="slot-status-text">Available</span>
+                </div>
+                {% endif %}
+                {% endfor %}
             </div>
+        </div>
+
+        <div class="section">
             <div class="form-group">
                 <label for="reason">Reason for Visit</label>
                 <input type="text" autocomplete="off" id="reason" name="reason" required placeholder="Describe your reason for visit">
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Confirm Booking</button>
-        </form>
-    </div>
+            <button type="submit" class="btn btn-primary btn-block" id="confirmBtn" disabled>Confirm Booking</button>
+            <p class="form-hint" id="selectHint" style="text-align:center; margin-top:8px;">Click a green time slot above to select it</p>
+        </div>
+    </form>
+    {% endif %}
 
     <div class="back-link">
         <a href="{% url 'appointment_book' %}">Back to Doctor List</a>
@@ -104,5 +130,22 @@
         <a href="{% url 'home' %}">Back to Home</a>
     </div>
 </div>
-{% endblock %}
 
+<script>
+function pickDay(day) {
+    var params = new URLSearchParams(window.location.search);
+    params.set('day', day);
+    window.location.search = params.toString();
+}
+
+function selectTime(el, hour) {
+    document.querySelectorAll('.time-slot.selected').forEach(function(s) {
+        s.classList.remove('selected');
+    });
+    el.classList.add('selected');
+    document.getElementById('selected_hour').value = hour;
+    document.getElementById('confirmBtn').disabled = false;
+    document.getElementById('selectHint').style.display = 'none';
+}
+</script>
+{% endblock %}

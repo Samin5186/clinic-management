@@ -12,7 +12,8 @@ def env_bool(name, default=False):
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-clinic-auth-module-key-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env_bool('DJANGO_DEBUG', False)
+# DEBUG defaults to True for local dev (no DATABASE_URL), False for production (has DATABASE_URL)
+DEBUG = env_bool('DJANGO_DEBUG', not bool(os.environ.get('DATABASE_URL')))
 
 ALLOWED_HOSTS = [h.strip() for h in os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',') if h.strip()]
 
@@ -72,8 +73,8 @@ else:
 
 AUTH_PASSWORD_VALIDATORS = []
 
-LANGUAGE_CODE = 'fa-ir'
-TIME_ZONE = 'Asia/Tehran'
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
 USE_I18N = True
 
 DEFAULT_CHARSET = 'utf-8'
@@ -97,4 +98,6 @@ SECURE_SSL_REDIRECT = env_bool('DJANGO_SECURE_SSL_REDIRECT', not DEBUG)
 SESSION_COOKIE_SECURE = env_bool('DJANGO_SESSION_COOKIE_SECURE', not DEBUG)
 CSRF_COOKIE_SECURE = env_bool('DJANGO_CSRF_COOKIE_SECURE', not DEBUG)
 SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_DOMAIN = '.up.railway.app'
+
+_cookie_domain = os.environ.get('DJANGO_SESSION_COOKIE_DOMAIN', '')
+SESSION_COOKIE_DOMAIN = _cookie_domain or None

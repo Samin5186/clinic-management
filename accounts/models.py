@@ -57,7 +57,7 @@ class Patient(models.Model):
     age = models.IntegerField()
     phone_encrypted = models.TextField(unique=True)
     email_encrypted = models.TextField(unique=True)
-    password_5digit = models.CharField(max_length=5)
+    password_hash = models.CharField(max_length=128, default='')
     insurance = models.CharField(max_length=30, choices=INSURANCE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -154,6 +154,7 @@ class Medication(models.Model):
     name_encrypted = models.TextField()
     dosage_encrypted = models.TextField()
     time = models.TimeField()
+    times_of_day = models.CharField(max_length=200, default='', blank=True, help_text='Comma-separated times like 08:00,14:00,20:00')
     times_per_day = models.IntegerField(default=1)
     days_of_week = models.CharField(max_length=100, default='')
     hour = models.IntegerField(default=8)
@@ -190,7 +191,14 @@ class Medication(models.Model):
             'friday': 'Friday',
         }
         days = self.days_of_week.split(',') if self.days_of_week else []
+        if len(days) == 7:
+            return 'Every day'
         return ', '.join([day_names.get(d, d) for d in days if d])
+
+    def get_times_display(self):
+        if self.times_of_day:
+            return self.times_of_day
+        return str(self.time)
 
     def __str__(self):
         return f"{self.name} - {self.patient.full_name}"

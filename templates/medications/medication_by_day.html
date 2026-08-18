@@ -42,8 +42,7 @@
                         {{ med.name }}
                     </div>
                     <div class="med-detail"><span class="label">Dosage:</span> {{ med.dosage }}</div>
-                    <div class="med-detail"><span class="label">Time:</span> {{ med.time }}</div>
-                    <div class="med-detail"><span class="label">Times per day:</span> {{ med.times_per_day }}</div>
+                    <div class="med-detail"><span class="label">Time:</span> {{ med.get_times_display }}</div>
                 </div>
                 <div class="med-actions">
                     <a href="{{ med.toggle_url }}" class="btn btn-sm {% if med.is_taken %}btn-secondary{% else %}btn-success{% endif %}">

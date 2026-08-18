@@ -2,28 +2,62 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
 from django.urls import reverse
+from datetime import date, timedelta
 from .models import User, Doctor, Patient, Appointment, Medication, HealthReading
 
 
 def home(request):
     if request.user.is_authenticated:
         if request.user.role == 'patient':
-            return redirect('patient_appointments')
+            return redirect('patient_dashboard')
         elif request.user.role == 'doctor':
             return redirect('doctor_appointments')
         elif request.user.is_admin_user:
             return redirect('admin_panel')
-        return redirect('dashboard')
+        return redirect('patient_dashboard')
     return render(request, 'landing.html')
+
+
+@login_required
+def patient_dashboard(request):
+    if request.user.role != 'patient':
+        return redirect('home')
+
+    patient = request.user.patient_profile
+    today = date.today()
+    tomorrow = today + timedelta(days=1)
+    weekday_map = {0: 'monday', 1: 'tuesday', 2: 'wednesday', 3: 'thursday', 4: 'friday', 5: 'saturday', 6: 'sunday'}
+    today_name = weekday_map[today.weekday()]
+
+    meds_today = Medication.objects.filter(patient=patient, days_of_week__contains=today_name)
+    reminders = []
+    for med in meds_today:
+        taken = (med.taken_days or '').split(',')
+        if today_name not in taken:
+            reminders.append({'type': 'medication', 'message': f"Time to take {med.name} ({med.dosage})", 'med': med})
+
+    upcoming_appts = Appointment.objects.filter(
+        patient=patient, is_cancelled=False,
+        year=tomorrow.year, month=tomorrow.month, day=tomorrow.day,
+    )
+    for appt in upcoming_appts:
+        reminders.append({'type': 'appointment', 'message': f"Appointment with Dr. {appt.doctor.name} tomorrow at {appt.hour:02d}:{appt.minute:02d}", 'appt': appt})
+
+    return render(request, 'patient_dashboard.html', {
+        'reminders': reminders,
+        'reminder_count': len(reminders),
+        'reminders_json': [{'type': r['type'], 'message': r['message']} for r in reminders],
+    })
 
 
 def dashboard(request):
     if not request.user.is_authenticated:
         return redirect('home')
     if request.user.role == 'patient':
-        return redirect('patient_appointments')
+        return redirect('patient_dashboard')
     elif request.user.role == 'doctor':
         return redirect('doctor_appointments')
     elif request.user.is_admin_user:
@@ -55,17 +89,17 @@ def login_view(request):
         except Doctor.DoesNotExist:
             pass
 
-        # Try patient login (email/phone + 5-digit password)
+        # Try patient login (email/phone + password)
         patients = Patient.objects.all()
         matched_patient = None
         for p in patients:
-            if (p.email == identifier or p.phone == identifier) and p.password_5digit == password:
+            if (p.email == identifier or p.phone == identifier) and check_password(password, p.password_hash):
                 matched_patient = p
                 break
 
         if matched_patient:
             login(request, matched_patient.user)
-            return redirect('patient_appointments')
+            return redirect('patient_dashboard')
 
         # Try admin with username (in case identifier is username)
         user = authenticate(request, username=identifier, password=password)
@@ -102,8 +136,12 @@ def register_patient(request):
             errors.append('Phone must be 11 digits starting with 09.')
         if not email or '@' not in email:
             errors.append('Valid email is required.')
-        if len(password1) != 5 or not password1.isdigit():
-            errors.append('Password must be exactly 5 digits.')
+        if len(password1) < 8:
+            errors.append('Password must be at least 8 characters long.')
+        if password1.isalpha():
+            errors.append('Password must contain at least one number.')
+        if password1.isdigit():
+            errors.append('Password must contain at least one letter.')
         if password1 != password2:
             errors.append('Passwords do not match.')
 
@@ -133,7 +171,7 @@ def register_patient(request):
         patient = Patient(
             user=user,
             age=int(age),
-            password_5digit=password1,
+            password_hash=make_password(password1),
             insurance=insurance
         )
         patient.first_name = first_name
@@ -187,7 +225,7 @@ def appointment_book(request):
     booked_hours = []
 
     now = timezone.now()
-    selected_day = now.day
+    selected_day = None
     selected_month = now.month
     selected_year = now.year
 
@@ -196,21 +234,61 @@ def appointment_book(request):
     month = request.GET.get('month')
     year = request.GET.get('year')
 
-    if day and month and year:
-        selected_day = int(day)
+    if month and year:
         selected_month = int(month)
         selected_year = int(year)
 
+    if day:
+        selected_day = int(day)
+
     if doctor_id:
         selected_doctor = get_object_or_404(Doctor, id=doctor_id)
-        booked_appointments = Appointment.objects.filter(
-            doctor=selected_doctor,
-            day=selected_day,
-            month=selected_month,
-            year=selected_year,
-            is_cancelled=False
-        )
-        booked_hours = [a.hour for a in booked_appointments]
+
+        if selected_day is not None:
+            booked_appointments = Appointment.objects.filter(
+                doctor=selected_doctor,
+                day=selected_day,
+                month=selected_month,
+                year=selected_year,
+                is_cancelled=False
+            )
+            booked_hours = [a.hour for a in booked_appointments]
+
+    import calendar as cal
+    cal_obj = cal.Calendar(firstweekday=5)
+    month_days = cal_obj.monthdayscalendar(selected_year, selected_month)
+    month_name = cal.month_name[selected_month]
+
+    if selected_month == 12:
+        next_month, next_year = 1, selected_year + 1
+    else:
+        next_month, next_year = selected_month + 1, selected_year
+
+    if selected_month == 1:
+        prev_month, prev_year = 12, selected_year - 1
+    else:
+        prev_month, prev_year = selected_month - 1, selected_year
+
+    calendar_weekdays = []
+    for week in month_days:
+        for d in week:
+            if d == 0:
+                continue
+            try:
+                dt = date(selected_year, selected_month, d)
+                is_weekday = dt.weekday() not in (5, 6)
+                is_past = dt < now.date()
+                calendar_weekdays.append({
+                    'day': d,
+                    'weekday': dt.weekday(),
+                    'name': cal.day_abbr[dt.weekday()],
+                    'is_weekday': is_weekday,
+                    'is_past': is_past,
+                    'is_today': dt == now.date(),
+                    'is_selected': selected_day == d,
+                })
+            except ValueError:
+                pass
 
     if request.method == 'POST':
         doctor_id = request.POST.get('doctor_id')
@@ -221,6 +299,15 @@ def appointment_book(request):
         reason = request.POST.get('reason', '').strip()
 
         doctor = get_object_or_404(Doctor, id=doctor_id)
+
+        from datetime import date as dt_date
+        try:
+            check_date = dt_date(year, month, day)
+            if check_date.weekday() in (5, 6):
+                messages.error(request, 'Cannot book appointments on Saturday or Sunday.')
+                return redirect(f"{request.path}?doctor_id={doctor_id}")
+        except ValueError:
+            pass
 
         if hour < 8 or hour > 17:
             messages.error(request, 'Please select a time between 8 AM and 6 PM.')
@@ -257,6 +344,13 @@ def appointment_book(request):
         'selected_day': selected_day,
         'selected_month': selected_month,
         'selected_year': selected_year,
+        'prev_month': prev_month,
+        'prev_year': prev_year,
+        'next_month': next_month,
+        'next_year': next_year,
+        'month_name': month_name,
+        'month_days': month_days,
+        'calendar_weekdays': calendar_weekdays,
         'hours': range(8, 18),
     })
 
@@ -290,6 +384,8 @@ def appointment_delete(request, appointment_id):
 
 # ==================== Doctor Appointment Views ====================
 
+from datetime import date as dt_date
+
 @login_required
 def doctor_appointments(request):
     if not hasattr(request.user, 'doctor_profile'):
@@ -299,9 +395,53 @@ def doctor_appointments(request):
     doctor = request.user.doctor_profile
     appointments = Appointment.objects.filter(doctor=doctor, is_cancelled=False).order_by('year', 'month', 'day', 'hour')
 
+    grouped = {}
+    day_names = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'}
+    for appt in appointments:
+        try:
+            d = dt_date(appt.year, appt.month, appt.day)
+            key = d.isoformat()
+        except ValueError:
+            key = f"{appt.year}-{appt.month:02d}-{appt.day:02d}"
+            d = None
+
+        if key not in grouped:
+            if d:
+                grouped[key] = {
+                    'date': d,
+                    'day_name': day_names.get(d.weekday(), ''),
+                    'display': d.strftime('%b %d, %Y'),
+                    'appointments': [],
+                }
+            else:
+                grouped[key] = {
+                    'date': None,
+                    'day_name': '',
+                    'display': f"{appt.year}/{appt.month}/{appt.day}",
+                    'appointments': [],
+                }
+
+        try:
+            patient = appt.patient
+            insurance = patient.get_insurance_display_name()
+        except Exception:
+            insurance = 'Unknown'
+
+        grouped[key]['appointments'].append({
+            'patient_name': appt.patient_name,
+            'patient_phone': appt.patient_phone,
+            'time': f"{appt.hour:02d}:{appt.minute:02d}",
+            'reason': appt.reason,
+            'insurance': insurance,
+        })
+
+    sorted_days = sorted(grouped.values(), key=lambda x: x['date'] if x['date'] else dt_date.max)
+
     return render(request, 'appointments/doctor_appointments.html', {
         'doctor': doctor,
         'appointments': appointments,
+        'grouped_days': sorted_days,
+        'total_count': appointments.count(),
     })
 
 
@@ -466,7 +606,6 @@ def medication_add(request):
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()
         dosage = request.POST.get('dosage', '').strip()
-        time_str = request.POST.get('time', '').strip()
         times_per_day = int(request.POST.get('times_per_day', 1))
         days_list = request.POST.getlist('days_of_week')
         days_str = ','.join(days_list)
@@ -476,26 +615,34 @@ def medication_add(request):
             errors.append('Medication name is required.')
         if not dosage:
             errors.append('Dosage is required.')
-        if not time_str:
-            errors.append('Time is required.')
         if not days_list:
             errors.append('Please select at least one day.')
+
+        times_list = []
+        for i in range(1, times_per_day + 1):
+            t = request.POST.get(f'time_{i}', '').strip()
+            if not t:
+                errors.append(f'Time {i} is required.')
+            else:
+                times_list.append(t)
 
         if errors:
             for e in errors:
                 messages.error(request, e)
         else:
             try:
-                hour, minute = map(int, time_str.split(':'))
                 from datetime import time as dt_time
                 from django.utils import timezone
                 now = timezone.now()
+                first_hour, first_minute = map(int, times_list[0].split(':'))
+                times_str = ','.join(times_list)
                 med = Medication(
                     patient=patient,
-                    time=dt_time(hour, minute),
+                    time=dt_time(first_hour, first_minute),
+                    times_of_day=times_str,
                     times_per_day=times_per_day,
                     days_of_week=days_str,
-                    hour=hour,
+                    hour=first_hour,
                     day=now.day,
                     month=now.month,
                     year=now.year,
