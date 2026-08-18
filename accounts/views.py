@@ -28,28 +28,36 @@ def patient_dashboard(request):
 
     try:
         patient = request.user.patient_profile
-    except Patient.DoesNotExist:
+    except Exception as e:
+        with open('server.log', 'a') as f:
+            f.write(f"\n=== PATIENT_DASH ERROR: {e} ===\n")
         messages.error(request, 'Patient profile not found. Please contact support.')
         logout(request)
         return redirect('home')
-    today = date.today()
-    tomorrow = today + timedelta(days=1)
-    weekday_map = {0: 'monday', 1: 'tuesday', 2: 'wednesday', 3: 'thursday', 4: 'friday', 5: 'saturday', 6: 'sunday'}
-    today_name = weekday_map[today.weekday()]
 
-    meds_today = Medication.objects.filter(patient=patient, days_of_week__contains=today_name)
-    reminders = []
-    for med in meds_today:
-        taken = (med.taken_days or '').split(',')
-        if today_name not in taken:
-            reminders.append({'type': 'medication', 'message': f"Time to take {med.name} ({med.dosage})", 'med': med})
+    try:
+        today = date.today()
+        tomorrow = today + timedelta(days=1)
+        weekday_map = {0: 'monday', 1: 'tuesday', 2: 'wednesday', 3: 'thursday', 4: 'friday', 5: 'saturday', 6: 'sunday'}
+        today_name = weekday_map[today.weekday()]
 
-    upcoming_appts = Appointment.objects.filter(
-        patient=patient, is_cancelled=False,
-        year=tomorrow.year, month=tomorrow.month, day=tomorrow.day,
-    )
-    for appt in upcoming_appts:
-        reminders.append({'type': 'appointment', 'message': f"Appointment with Dr. {appt.doctor.name} tomorrow at {appt.hour:02d}:{appt.minute:02d}", 'appt': appt})
+        meds_today = Medication.objects.filter(patient=patient, days_of_week__contains=today_name)
+        reminders = []
+        for med in meds_today:
+            taken = (med.taken_days or '').split(',')
+            if today_name not in taken:
+                reminders.append({'type': 'medication', 'message': f"Time to take {med.name} ({med.dosage})", 'med': med})
+
+        upcoming_appts = Appointment.objects.filter(
+            patient=patient, is_cancelled=False,
+            year=tomorrow.year, month=tomorrow.month, day=tomorrow.day,
+        )
+        for appt in upcoming_appts:
+            reminders.append({'type': 'appointment', 'message': f"Appointment with Dr. {appt.doctor.name} tomorrow at {appt.hour:02d}:{appt.minute:02d}", 'appt': appt})
+    except Exception as e:
+        with open('server.log', 'a') as f:
+            f.write(f"\n=== REMINDERS ERROR: {e} ===\n")
+        reminders = []
 
     return render(request, 'patient_dashboard.html', {
         'reminders': reminders,
