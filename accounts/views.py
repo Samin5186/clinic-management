@@ -253,6 +253,13 @@ def appointment_book(request):
         selected_month = int(month)
         selected_year = int(year)
 
+    if selected_month < 1:
+        selected_month = 12
+        selected_year -= 1
+    elif selected_month > 12:
+        selected_month = 1
+        selected_year += 1
+
     if day:
         selected_day = int(day)
 
