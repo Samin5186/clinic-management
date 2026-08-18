@@ -102,12 +102,19 @@ def login_view(request):
             pass
 
         # Try patient login (email/phone/username + password)
-        patients = Patient.objects.all()
         matched_patient = None
-        for p in patients:
-            if (p.email == identifier or p.phone == identifier or p.user.username == identifier) and check_password(password, p.password_hash):
-                matched_patient = p
-                break
+        try:
+            patients = Patient.objects.select_related('user').all()
+            for p in patients:
+                try:
+                    match = (p.email == identifier or p.phone == identifier or p.user.username == identifier)
+                except Exception:
+                    match = (p.user.username == identifier)
+                if match and check_password(password, p.password_hash):
+                    matched_patient = p
+                    break
+        except Exception:
+            pass
 
         if matched_patient:
             login(request, matched_patient.user, backend='django.contrib.auth.backends.ModelBackend')
