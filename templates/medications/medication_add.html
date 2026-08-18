@@ -43,13 +43,13 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Select Days</label>
-            <label class="day-checkbox select-all-row" style="display:flex; justify-content:center; width:100%;">
+        <div class="form-group" style="text-align:center;">
+            <label style="display:inline-block;">Select Days</label>
+            <label class="day-checkbox select-all-row" style="display:inline-flex; margin-top:8px;">
                 <input type="checkbox" id="select-all-days" onchange="toggleAllDays(this)">
                 <span>Select All 7 Days</span>
             </label>
-            <div class="days-checkboxes">
+            <div class="days-checkboxes" style="justify-content:center;">
                 {% for value, label in days %}
                 <label class="day-checkbox">
                     <input type="checkbox" name="days_of_week" value="{{ value }}" class="day-cb" onchange="updateSelectAll()">
