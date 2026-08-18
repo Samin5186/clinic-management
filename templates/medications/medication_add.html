@@ -44,12 +44,12 @@
         </div>
 
         <div class="form-group" style="text-align:center;">
-            <label style="display:inline-block;">Select Days</label>
-            <label class="day-checkbox select-all-row" style="display:inline-flex; margin-top:8px;">
+            <label style="display:block; text-align:center; margin-bottom:8px;">Select Days</label>
+            <label class="day-checkbox select-all-row">
                 <input type="checkbox" id="select-all-days" onchange="toggleAllDays(this)">
                 <span>Select All 7 Days</span>
             </label>
-            <div class="days-checkboxes" style="justify-content:center;">
+            <div class="days-checkboxes">
                 {% for value, label in days %}
                 <label class="day-checkbox">
                     <input type="checkbox" name="days_of_week" value="{{ value }}" class="day-cb" onchange="updateSelectAll()">
