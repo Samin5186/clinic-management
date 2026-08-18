@@ -80,9 +80,17 @@ def login_view(request):
             login(request, user)
             return redirect('admin_panel')
 
-        # Try doctor login (username = email, password = medical_number)
+        # Try doctor login (username or name, password = medical_number)
         try:
             doctor = Doctor.objects.get(user__username=identifier)
+            if doctor.user.check_password(password):
+                login(request, doctor.user)
+                return redirect('doctor_appointments')
+        except Doctor.DoesNotExist:
+            pass
+
+        try:
+            doctor = Doctor.objects.get(name__iexact=identifier)
             if doctor.user.check_password(password):
                 login(request, doctor.user)
                 return redirect('doctor_appointments')
