@@ -27,11 +27,13 @@ def home(request):
 
 @login_required
 def patient_dashboard(request):
+    logger.error("DASHBOARD DEBUG: user=%s, role=%s, is_authenticated=%s", request.user, getattr(request.user, 'role', 'NO ROLE'), request.user.is_authenticated)
     if request.user.role != 'patient':
         return redirect('home')
 
     try:
         patient = request.user.patient_profile
+        logger.error("DASHBOARD DEBUG: patient found, first_name_encrypted=%s", patient.first_name_encrypted[:20] if patient.first_name_encrypted else 'EMPTY')
     except Exception as e:
         logger.error("PATIENT_DASH error for user %s: %s", request.user, e, exc_info=True)
         messages.error(request, 'Patient profile not found. Please contact support.')
@@ -92,6 +94,7 @@ def login_view(request):
         try:
             # Try admin login first (username + password)
             user = authenticate(request, username=identifier, password=password)
+            logger.error("LOGIN DEBUG: authenticate result=%s, is_admin=%s", user, user.is_admin_user if user else 'N/A')
             if user and user.is_admin_user:
                 login(request, user)
                 return redirect('admin_panel')
@@ -99,6 +102,7 @@ def login_view(request):
             # Try doctor login (username or name, password = medical_number)
             try:
                 doctor = Doctor.objects.get(user__username=identifier)
+                logger.error("LOGIN DEBUG: found doctor by username: %s", doctor)
                 if doctor.user.check_password(password):
                     login(request, doctor.user)
                     return redirect('doctor_appointments')
@@ -107,6 +111,7 @@ def login_view(request):
 
             try:
                 doctor = Doctor.objects.get(name__iexact=identifier)
+                logger.error("LOGIN DEBUG: found doctor by name: %s", doctor)
                 if doctor.user.check_password(password):
                     login(request, doctor.user)
                     return redirect('doctor_appointments')
@@ -117,20 +122,32 @@ def login_view(request):
             matched_patient = None
             try:
                 patients = Patient.objects.select_related('user').all()
+                logger.error("LOGIN DEBUG: total patients=%d", patients.count())
                 for p in patients:
                     try:
-                        match = (p.email == identifier or p.phone == identifier or p.user.username == identifier)
-                    except Exception:
+                        p_email = p.email
+                        p_phone = p.phone
+                        p_username = p.user.username
+                        logger.error("LOGIN DEBUG: checking patient username=%s email_match=%s phone_match=%s", p_username, p_email == identifier, p_phone == identifier)
+                        match = (p_email == identifier or p_phone == identifier or p_username == identifier)
+                    except Exception as e:
+                        logger.error("LOGIN DEBUG: decrypt error for patient: %s", e)
                         match = (p.user.username == identifier)
-                    if match and check_password(password, p.password_hash):
-                        matched_patient = p
-                        break
-            except Exception:
-                pass
+                    if match:
+                        pw_check = check_password(password, p.password_hash)
+                        logger.error("LOGIN DEBUG: password check=%s for patient=%s", pw_check, p.user.username)
+                        if pw_check:
+                            matched_patient = p
+                            break
+            except Exception as e:
+                logger.error("LOGIN DEBUG: patient loop error: %s", e, exc_info=True)
 
             if matched_patient:
+                logger.error("LOGIN DEBUG: logging in patient=%s", matched_patient.user.username)
                 login(request, matched_patient.user, backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('patient_dashboard')
+            else:
+                logger.error("LOGIN DEBUG: no matched patient for identifier=%s", identifier)
 
             # Try admin with username (in case identifier is username)
             user = authenticate(request, username=identifier, password=password)
