@@ -101,3 +101,29 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 
 _cookie_domain = os.environ.get('DJANGO_SESSION_COOKIE_DOMAIN', '')
 SESSION_COOKIE_DOMAIN = _cookie_domain or None
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'accounts': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'clinic_auth': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}

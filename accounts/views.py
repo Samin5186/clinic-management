@@ -7,6 +7,10 @@ from django.utils import timezone
 from django.urls import reverse
 from datetime import date, timedelta
 from .models import User, Doctor, Patient, Appointment, Medication, HealthReading
+import logging
+import json
+
+logger = logging.getLogger(__name__)
 
 
 def home(request):
@@ -29,8 +33,7 @@ def patient_dashboard(request):
     try:
         patient = request.user.patient_profile
     except Exception as e:
-        with open('server.log', 'a') as f:
-            f.write(f"\n=== PATIENT_DASH ERROR: {e} ===\n")
+        logger.error("PATIENT_DASH error for user %s: %s", request.user, e, exc_info=True)
         messages.error(request, 'Patient profile not found. Please contact support.')
         logout(request)
         return redirect('home')
@@ -55,14 +58,13 @@ def patient_dashboard(request):
         for appt in upcoming_appts:
             reminders.append({'type': 'appointment', 'message': f"Appointment with Dr. {appt.doctor.name} tomorrow at {appt.hour:02d}:{appt.minute:02d}", 'appt': appt})
     except Exception as e:
-        with open('server.log', 'a') as f:
-            f.write(f"\n=== REMINDERS ERROR: {e} ===\n")
+        logger.error("REMINDERS error for user %s: %s", request.user, e, exc_info=True)
         reminders = []
 
     return render(request, 'patient_dashboard.html', {
         'reminders': reminders,
         'reminder_count': len(reminders),
-        'reminders_json': [{'type': r['type'], 'message': r['message']} for r in reminders],
+        'reminders_json': json.dumps([{'type': r['type'], 'message': r['message']} for r in reminders]),
     })
 
 
@@ -87,56 +89,62 @@ def login_view(request):
             messages.error(request, 'Please fill in all fields.')
             return render(request, 'login.html')
 
-        # Try admin login first (username + password)
-        user = authenticate(request, username=identifier, password=password)
-        if user and user.is_admin_user:
-            login(request, user)
-            return redirect('admin_panel')
-
-        # Try doctor login (username or name, password = medical_number)
         try:
-            doctor = Doctor.objects.get(user__username=identifier)
-            if doctor.user.check_password(password):
-                login(request, doctor.user)
-                return redirect('doctor_appointments')
-        except Doctor.DoesNotExist:
-            pass
+            # Try admin login first (username + password)
+            user = authenticate(request, username=identifier, password=password)
+            if user and user.is_admin_user:
+                login(request, user)
+                return redirect('admin_panel')
 
-        try:
-            doctor = Doctor.objects.get(name__iexact=identifier)
-            if doctor.user.check_password(password):
-                login(request, doctor.user)
-                return redirect('doctor_appointments')
-        except Doctor.DoesNotExist:
-            pass
+            # Try doctor login (username or name, password = medical_number)
+            try:
+                doctor = Doctor.objects.get(user__username=identifier)
+                if doctor.user.check_password(password):
+                    login(request, doctor.user)
+                    return redirect('doctor_appointments')
+            except Doctor.DoesNotExist:
+                pass
 
-        # Try patient login (email/phone/username + password)
-        matched_patient = None
-        try:
-            patients = Patient.objects.select_related('user').all()
-            for p in patients:
-                try:
-                    match = (p.email == identifier or p.phone == identifier or p.user.username == identifier)
-                except Exception:
-                    match = (p.user.username == identifier)
-                if match and check_password(password, p.password_hash):
-                    matched_patient = p
-                    break
-        except Exception:
-            pass
+            try:
+                doctor = Doctor.objects.get(name__iexact=identifier)
+                if doctor.user.check_password(password):
+                    login(request, doctor.user)
+                    return redirect('doctor_appointments')
+            except Doctor.DoesNotExist:
+                pass
 
-        if matched_patient:
-            login(request, matched_patient.user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('patient_dashboard')
+            # Try patient login (email/phone/username + password)
+            matched_patient = None
+            try:
+                patients = Patient.objects.select_related('user').all()
+                for p in patients:
+                    try:
+                        match = (p.email == identifier or p.phone == identifier or p.user.username == identifier)
+                    except Exception:
+                        match = (p.user.username == identifier)
+                    if match and check_password(password, p.password_hash):
+                        matched_patient = p
+                        break
+            except Exception:
+                pass
 
-        # Try admin with username (in case identifier is username)
-        user = authenticate(request, username=identifier, password=password)
-        if user and user.is_admin_user:
-            login(request, user)
-            return redirect('admin_panel')
+            if matched_patient:
+                login(request, matched_patient.user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect('patient_dashboard')
 
-        messages.error(request, 'Invalid credentials. Please check your credentials and try again.')
-        return render(request, 'login.html')
+            # Try admin with username (in case identifier is username)
+            user = authenticate(request, username=identifier, password=password)
+            if user and user.is_admin_user:
+                login(request, user)
+                return redirect('admin_panel')
+
+            messages.error(request, 'Invalid credentials. Please check your credentials and try again.')
+            return render(request, 'login.html')
+
+        except Exception as e:
+            logger.error("Login view error for identifier '%s': %s", identifier, e, exc_info=True)
+            messages.error(request, 'An error occurred. Please try again.')
+            return render(request, 'login.html')
 
     return render(request, 'login.html')
 
