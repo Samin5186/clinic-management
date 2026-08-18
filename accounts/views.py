@@ -26,7 +26,11 @@ def patient_dashboard(request):
     if request.user.role != 'patient':
         return redirect('home')
 
-    patient = request.user.patient_profile
+    try:
+        patient = request.user.patient_profile
+    except Patient.DoesNotExist:
+        messages.error(request, 'Patient profile not found. Please contact support.')
+        return redirect('home')
     today = date.today()
     tomorrow = today + timedelta(days=1)
     weekday_map = {0: 'monday', 1: 'tuesday', 2: 'wednesday', 3: 'thursday', 4: 'friday', 5: 'saturday', 6: 'sunday'}
@@ -106,7 +110,7 @@ def login_view(request):
                 break
 
         if matched_patient:
-            login(request, matched_patient.user)
+            login(request, matched_patient.user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('patient_dashboard')
 
         # Try admin with username (in case identifier is username)
