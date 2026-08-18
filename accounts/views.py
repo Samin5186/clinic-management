@@ -110,11 +110,17 @@ def login_view(request):
                 pass
 
             try:
-                doctor = Doctor.objects.get(name__iexact=identifier)
-                logger.error("LOGIN DEBUG: found doctor by name: %s", doctor)
-                if doctor.user.check_password(password):
-                    login(request, doctor.user)
-                    return redirect('doctor_appointments')
+                doctors = Doctor.objects.select_related('user').all()
+                matched_doctor = None
+                for d in doctors:
+                    if d.name.lower() == identifier.lower():
+                        matched_doctor = d
+                        break
+                if matched_doctor:
+                    logger.error("LOGIN DEBUG: found doctor by name: %s", matched_doctor)
+                    if matched_doctor.user.check_password(password):
+                        login(request, matched_doctor.user)
+                        return redirect('doctor_appointments')
             except Doctor.DoesNotExist:
                 pass
 
