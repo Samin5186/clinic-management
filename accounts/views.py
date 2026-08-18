@@ -89,11 +89,11 @@ def login_view(request):
         except Doctor.DoesNotExist:
             pass
 
-        # Try patient login (email/phone + password)
+        # Try patient login (email/phone/username + password)
         patients = Patient.objects.all()
         matched_patient = None
         for p in patients:
-            if (p.email == identifier or p.phone == identifier) and check_password(password, p.password_hash):
+            if (p.email == identifier or p.phone == identifier or p.user.username == identifier) and check_password(password, p.password_hash):
                 matched_patient = p
                 break
 
@@ -162,8 +162,15 @@ def register_patient(request):
                 'form_data': request.POST,
             })
 
+        base_username = first_name.lower().replace(' ', '')
+        username = base_username
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+
         user = User.objects.create_user(
-            username=email,
+            username=username,
             password=password1,
             role='patient'
         )
@@ -181,8 +188,8 @@ def register_patient(request):
         patient.save()
 
         login(request, user)
-        messages.success(request, 'Registration successful! Welcome!')
-        return redirect('home')
+        messages.success(request, f'Registration successful! Your username is "{username}". Welcome!')
+        return redirect('patient_dashboard')
 
     return render(request, 'register.html', {'insurance_choices': Patient.INSURANCE_CHOICES})
 

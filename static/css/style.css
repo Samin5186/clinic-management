@@ -726,6 +726,7 @@ body {
     border-radius: 20px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
     border: 1px solid #e2e8f0;
+    overflow: hidden;
 }
 
 /* ============================================
@@ -1975,7 +1976,31 @@ body {
     .footer-inner { padding: 40px 16px 24px; gap: 28px; }
     .footer-links-group { gap: 24px; }
 
+    /* Table scroll on mobile */
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -8px; padding: 0 8px; }
+
     /* Actions bar */
     .actions-bar { flex-direction: column; }
     .actions-bar .btn { min-width: 0; }
+
+    /* Delete / danger btn compact */
+    .btn-danger { padding: 6px 12px; font-size: 0.78rem; }
+
+    /* Appointment list on mobile */
+    .appointment-list { gap: 10px; }
+
+    /* Medication list on mobile */
+    .med-list { gap: 10px; }
+
+    /* Doctor list on mobile */
+    .doctor-list { gap: 8px; }
+    .doctor-card { padding: 14px 16px; gap: 12px; }
+    .doctor-avatar { width: 40px; height: 40px; font-size: 1.3rem; }
+
+    /* Form groups */
+    .form-group label { font-size: 0.85rem; }
+    .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; font-size: 0.9rem; width: 100%; box-sizing: border-box; }
+
+    /* Login form */
+    .login-form { padding: 0; }
 }
