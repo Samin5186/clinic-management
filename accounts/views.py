@@ -92,20 +92,31 @@ def login_view(request):
             return render(request, 'login.html')
 
         try:
+            # Track what we tried for better error messages
+            tried_admin = False
+            tried_doctor = False
+            tried_patient = False
+            patient_found = False
+            password_wrong = False
+
             # Try admin login first (username + password)
             user = authenticate(request, username=identifier, password=password)
             logger.error("LOGIN DEBUG: authenticate result=%s, is_admin=%s", user, user.is_admin_user if user else 'N/A')
             if user and user.is_admin_user:
                 login(request, user)
                 return redirect('admin_panel')
+            tried_admin = True
 
             # Try doctor login (username or name, password = medical_number)
             try:
                 doctor = Doctor.objects.get(user__username=identifier)
                 logger.error("LOGIN DEBUG: found doctor by username: %s", doctor)
+                tried_doctor = True
                 if doctor.user.check_password(password):
                     login(request, doctor.user)
                     return redirect('doctor_appointments')
+                else:
+                    password_wrong = True
             except Doctor.DoesNotExist:
                 pass
 
@@ -118,9 +129,12 @@ def login_view(request):
                         break
                 if matched_doctor:
                     logger.error("LOGIN DEBUG: found doctor by name: %s", matched_doctor)
+                    tried_doctor = True
                     if matched_doctor.user.check_password(password):
                         login(request, matched_doctor.user)
                         return redirect('doctor_appointments')
+                    else:
+                        password_wrong = True
             except Doctor.DoesNotExist:
                 pass
 
@@ -140,11 +154,14 @@ def login_view(request):
                         logger.error("LOGIN DEBUG: decrypt error for patient: %s", e)
                         match = (p.user.username == identifier)
                     if match:
+                        patient_found = True
                         pw_check = check_password(password, p.password_hash)
                         logger.error("LOGIN DEBUG: password check=%s for patient=%s", pw_check, p.user.username)
                         if pw_check:
                             matched_patient = p
                             break
+                        else:
+                            password_wrong = True
             except Exception as e:
                 logger.error("LOGIN DEBUG: patient loop error: %s", e, exc_info=True)
 
@@ -154,6 +171,7 @@ def login_view(request):
                 return redirect('patient_dashboard')
             else:
                 logger.error("LOGIN DEBUG: no matched patient for identifier=%s", identifier)
+            tried_patient = True
 
             # Try admin with username (in case identifier is username)
             user = authenticate(request, username=identifier, password=password)
@@ -161,7 +179,18 @@ def login_view(request):
                 login(request, user)
                 return redirect('admin_panel')
 
-            messages.error(request, 'Invalid credentials. Please check your credentials and try again.')
+            # More specific error messages
+            if patient_found and password_wrong:
+                messages.error(request, 'Wrong password for this account. Please try again.')
+            elif tried_doctor and password_wrong:
+                messages.error(request, 'Wrong medical number. Please check and try again.')
+            elif tried_admin and not user:
+                messages.error(request, 'No account found with that username/email/phone. Please check or register.')
+            elif tried_patient and not patient_found:
+                messages.error(request, 'No account found with that username, email, or phone. Please check or register.')
+            else:
+                messages.error(request, 'Invalid credentials. Please check your username/email/phone and password.')
+
             return render(request, 'login.html')
 
         except Exception as e:
