@@ -503,15 +503,22 @@ def admin_add_doctor(request):
             for e in errors:
                 messages.error(request, e)
         else:
+            base_username = name.lower().replace(' ', '')
+            username = base_username
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
+
             user = User.objects.create_user(
-                username=f"dr_{medical_number}",
+                username=username,
                 password=medical_number,
                 role='doctor'
             )
             doctor = Doctor(user=user, medical_number=medical_number)
             doctor.name = name
             doctor.save()
-            messages.success(request, f'Dr. {name} added successfully!')
+            messages.success(request, f'Dr. {name} added! Username: {username}')
             return redirect('admin_panel')
 
     return render(request, 'admin/add_doctor.html')
