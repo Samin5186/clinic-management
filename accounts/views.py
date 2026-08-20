@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
 from django.urls import reverse
 from datetime import date, timedelta
-from .models import User, Doctor, Patient, Appointment, Medication, HealthReading
+from .models import User, Doctor, Patient, Appointment, Medication, HealthReading, INSURANCE_CHOICES
 import logging
 import json
 
@@ -315,7 +315,14 @@ def appointment_book(request):
         return redirect('home')
 
     patient = request.user.patient_profile
-    doctors = Doctor.objects.all()
+
+    insurance_filter = request.GET.get('insurance', '')
+    if insurance_filter:
+        all_doctors = Doctor.objects.all()
+        doctors = [d for d in all_doctors if insurance_filter in d.get_accepted_insurance_list()]
+    else:
+        doctors = Doctor.objects.all()
+
     selected_doctor = None
     booked_hours = []
 
@@ -454,6 +461,9 @@ def appointment_book(request):
         'month_days': month_days,
         'calendar_weekdays': calendar_weekdays,
         'hours': range(8, 18),
+        'insurance_choices': INSURANCE_CHOICES,
+        'insurance_filter': insurance_filter,
+        'patient_insurance': patient.insurance,
     })
 
 
@@ -936,4 +946,25 @@ def health_chart(request):
     return render(request, 'health/chart.html', {
         'patient': patient,
         'readings': readings,
+    })
+
+
+@login_required
+def doctor_insurance_settings(request):
+    try:
+        doctor = request.user.doctor_profile
+    except Exception:
+        messages.error(request, 'Access denied.')
+        return redirect('home')
+
+    if request.method == 'POST':
+        selected = request.POST.getlist('accepted_insurance')
+        doctor.accepted_insurance = ','.join(selected)
+        doctor.save()
+        messages.success(request, 'Insurance settings saved.')
+        return redirect('doctor_appointments')
+
+    return render(request, 'appointments/doctor_insurance_settings.html', {
+        'doctor': doctor,
+        'insurance_choices': INSURANCE_CHOICES,
     })

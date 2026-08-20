@@ -2,6 +2,22 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .encryption import encrypt_data, decrypt_data
 
+INSURANCE_CHOICES = [
+    ('bimeh_salamat', 'Bimeh Salamat Iranian (Iran Health Insurance)'),
+    ('bimeh_tamin_ejtemaei', 'Social Security Insurance'),
+    ('bimeh_niroo_mosallah', 'Armed Forces Insurance'),
+    ('bimeh_roostaei_ashayer', 'Rural & Nomadic Insurance'),
+    ('bimeh_komite_emdad', 'Imam Khomeini Relief Committee Insurance'),
+    ('bimeh_khadamat_darmani', 'Medical Services Insurance (Gov. Employees)'),
+    ('bimeh_iran', 'Iran Insurance'),
+    ('bimeh_asia', 'Asia Insurance'),
+    ('bimeh_dana', 'Dana Insurance'),
+    ('bimeh_parsian', 'Parsian Insurance'),
+    ('bimeh_novin', 'Novin Insurance'),
+    ('bimeh_saman', 'Saman Insurance'),
+    ('bimeh_razi', 'Razi Insurance'),
+]
+
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -20,6 +36,7 @@ class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctor_profile')
     name_encrypted = models.TextField()
     medical_number = models.CharField(max_length=4, unique=True)
+    accepted_insurance = models.CharField(max_length=500, default='', blank=True, help_text='Comma-separated insurance keys the doctor accepts')
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -30,26 +47,22 @@ class Doctor(models.Model):
     def name(self, value):
         self.name_encrypted = encrypt_data(value)
 
+    def get_accepted_insurance_list(self):
+        if not self.accepted_insurance:
+            return []
+        return [i.strip() for i in self.accepted_insurance.split(',') if i.strip()]
+
+    def get_accepted_insurance_display(self):
+        choices = dict(INSURANCE_CHOICES)
+        items = self.get_accepted_insurance_list()
+        return ', '.join([choices.get(i, i) for i in items]) or 'No insurance set'
+
     def __str__(self):
         return f"Dr. {self.name} ({self.medical_number})"
 
 
 class Patient(models.Model):
-    INSURANCE_CHOICES = [
-        ('bimeh_salamat', 'Bimeh Salamat Iranian (Iran Health Insurance)'),
-        ('bimeh_tamin_ejtemaei', 'Social Security Insurance'),
-        ('bimeh_niroo_mosallah', 'Armed Forces Insurance'),
-        ('bimeh_roostaei_ashayer', 'Rural & Nomadic Insurance'),
-        ('bimeh_komite_emdad', 'Imam Khomeini Relief Committee Insurance'),
-        ('bimeh_khadamat_darmani', 'Medical Services Insurance (Gov. Employees)'),
-        ('bimeh_iran', 'Iran Insurance'),
-        ('bimeh_asia', 'Asia Insurance'),
-        ('bimeh_dana', 'Dana Insurance'),
-        ('bimeh_parsian', 'Parsian Insurance'),
-        ('bimeh_novin', 'Novin Insurance'),
-        ('bimeh_saman', 'Saman Insurance'),
-        ('bimeh_razi', 'Razi Insurance'),
-    ]
+    INSURANCE_CHOICES = INSURANCE_CHOICES
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patient_profile')
     first_name_encrypted = models.TextField()
