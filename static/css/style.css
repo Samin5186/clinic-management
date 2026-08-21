@@ -499,6 +499,42 @@ body {
 .bento-fuchsia::before { background: linear-gradient(135deg, #d946ef, #e879f9); }
 .bento-fuchsia:hover { border-color: #c026d3; box-shadow: 0 16px 48px rgba(217, 70, 239, 0.25); }
 
+/* Divider card for section separation */
+.bento-divider {
+    background: transparent;
+    border: none;
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bento-divider::before { display: none; }
+.bento-divider:hover { 
+    box-shadow: none; 
+    transform: none; 
+    border-color: transparent; 
+}
+.bento-divider-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 800px;
+}
+.divider-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+}
+.divider-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
 /* Make accent card work with the new system */
 .bento-accent {
     border-color: transparent;
