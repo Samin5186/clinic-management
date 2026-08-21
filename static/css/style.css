@@ -407,6 +407,92 @@ body {
 }
 
 /* ============================================
+   SERVICES (What We Treat)
+   ============================================ */
+.services {
+    padding: 100px 24px;
+    background: #f8fafc;
+}
+
+.services-header {
+    text-align: center;
+    margin-bottom: 56px;
+}
+
+.services-header .section-tag {
+    background: #e8eef6;
+    color: #1e3a8a;
+}
+
+.services-header h3 {
+    font-size: 2.5rem;
+    color: #0f172a;
+    margin-bottom: 12px;
+    font-weight: 800;
+}
+
+.services-header p {
+    font-size: 1.15rem;
+    color: #64748b;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    border-color: #1e3a8a;
+}
+
+.service-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #e8eef6, #dbe8f4);
+    color: #1e3a8a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    transition: all 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+    background: linear-gradient(135deg, #1e3a8a, #1e40af);
+    color: white;
+    transform: scale(1.1);
+}
+
+.service-card h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.service-card p {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* ============================================
    HOW IT WORKS
    ============================================ */
 .how-it-works {
@@ -944,6 +1030,10 @@ body {
         grid-column: span 1;
         flex-direction: column;
         text-align: center;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
     }
 
     .cta-actions { flex-direction: column; align-items: center; }
