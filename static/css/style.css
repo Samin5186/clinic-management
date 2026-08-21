@@ -407,90 +407,110 @@ body {
 }
 
 /* ============================================
-   SERVICES (What We Treat)
+   COLORFUL BENTO CARD VARIANTS
    ============================================ */
-.services {
-    padding: 100px 24px;
-    background: #f8fafc;
+.bento-blue {
+    border-color: #3b82f6;
 }
+.bento-blue::before { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+.bento-blue:hover { border-color: #2563eb; box-shadow: 0 16px 48px rgba(59, 130, 246, 0.25); }
 
-.services-header {
-    text-align: center;
-    margin-bottom: 56px;
+.bento-green {
+    border-color: #10b981;
 }
+.bento-green::before { background: linear-gradient(135deg, #10b981, #34d399); }
+.bento-green:hover { border-color: #059669; box-shadow: 0 16px 48px rgba(16, 185, 129, 0.25); }
 
-.services-header .section-tag {
-    background: #e8eef6;
-    color: #1e3a8a;
+.bento-purple {
+    border-color: #8b5cf6;
 }
+.bento-purple::before { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+.bento-purple:hover { border-color: #7c3aed; box-shadow: 0 16px 48px rgba(139, 92, 246, 0.25); }
 
-.services-header h3 {
-    font-size: 2.5rem;
-    color: #0f172a;
-    margin-bottom: 12px;
-    font-weight: 800;
+.bento-orange {
+    border-color: #f97316;
 }
+.bento-orange::before { background: linear-gradient(135deg, #f97316, #fb923c); }
+.bento-orange:hover { border-color: #ea580c; box-shadow: 0 16px 48px rgba(249, 115, 22, 0.25); }
 
-.services-header p {
-    font-size: 1.15rem;
-    color: #64748b;
+.bento-teal {
+    border-color: #14b8a6;
 }
+.bento-teal::before { background: linear-gradient(135deg, #14b8a6, #2dd4bf); }
+.bento-teal:hover { border-color: #0d9488; box-shadow: 0 16px 48px rgba(20, 184, 166, 0.25); }
 
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 24px;
-    max-width: 1200px;
-    margin: 0 auto;
+.bento-red {
+    border-color: #ef4444;
 }
+.bento-red::before { background: linear-gradient(135deg, #ef4444, #f87171); }
+.bento-red:hover { border-color: #dc2626; box-shadow: 0 16px 48px rgba(239, 68, 68, 0.25); }
 
-.service-card {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 28px 24px;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+.bento-indigo {
+    border-color: #6366f1;
 }
+.bento-indigo::before { background: linear-gradient(135deg, #6366f1, #818cf8); }
+.bento-indigo:hover { border-color: #4f46e5; box-shadow: 0 16px 48px rgba(99, 102, 241, 0.25); }
 
-.service-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-    border-color: #1e3a8a;
+.bento-amber {
+    border-color: #f59e0b;
 }
+.bento-amber::before { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+.bento-amber:hover { border-color: #d97706; box-shadow: 0 16px 48px rgba(245, 158, 11, 0.25); }
 
-.service-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #e8eef6, #dbe8f4);
-    color: #1e3a8a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    transition: all 0.3s ease;
+.bento-rose {
+    border-color: #f43f5e;
 }
+.bento-rose::before { background: linear-gradient(135deg, #f43f5e, #fb7185); }
+.bento-rose:hover { border-color: #e11d48; box-shadow: 0 16px 48px rgba(244, 63, 94, 0.25); }
 
-.service-card:hover .service-icon {
-    background: linear-gradient(135deg, #1e3a8a, #1e40af);
-    color: white;
-    transform: scale(1.1);
+.bento-emerald {
+    border-color: #10b981;
 }
+.bento-emerald::before { background: linear-gradient(135deg, #10b981, #34d399); }
+.bento-emerald:hover { border-color: #059669; box-shadow: 0 16px 48px rgba(16, 185, 129, 0.25); }
 
-.service-card h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 6px;
+.bento-violet {
+    border-color: #8b5cf6;
 }
+.bento-violet::before { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+.bento-violet:hover { border-color: #7c3aed; box-shadow: 0 16px 48px rgba(139, 92, 246, 0.25); }
 
-.service-card p {
-    font-size: 0.9rem;
-    color: #64748b;
-    line-height: 1.5;
+.bento-cyan {
+    border-color: #06b6d4;
 }
+.bento-cyan::before { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
+.bento-cyan:hover { border-color: #0891b2; box-shadow: 0 16px 48px rgba(6, 182, 212, 0.25); }
+
+.bento-lime {
+    border-color: #84cc16;
+}
+.bento-lime::before { background: linear-gradient(135deg, #84cc16, #a3e635); }
+.bento-lime:hover { border-color: #65a30d; box-shadow: 0 16px 48px rgba(132, 204, 22, 0.25); }
+
+.bento-sky {
+    border-color: #0ea5e9;
+}
+.bento-sky::before { background: linear-gradient(135deg, #0ea5e9, #38bdf8); }
+.bento-sky:hover { border-color: #0284c7; box-shadow: 0 16px 48px rgba(14, 165, 233, 0.25); }
+
+.bento-fuchsia {
+    border-color: #d946ef;
+}
+.bento-fuchsia::before { background: linear-gradient(135deg, #d946ef, #e879f9); }
+.bento-fuchsia:hover { border-color: #c026d3; box-shadow: 0 16px 48px rgba(217, 70, 239, 0.25); }
+
+/* Make accent card work with the new system */
+.bento-accent {
+    border-color: transparent;
+    background: linear-gradient(135deg, #0f172a, #1e3a5f);
+}
+.bento-accent::before { background: linear-gradient(90deg, #60a5fa, #a78bfa); }
+.bento-accent:hover {
+    border-color: transparent;
+    box-shadow: 0 16px 48px rgba(15, 23, 42, 0.3);
+}
+.bento-accent .bento-text h4 { color: white; }
+.bento-accent .bento-text p { color: rgba(255, 255, 255, 0.7); }
 
 /* ============================================
    HOW IT WORKS
@@ -1030,10 +1050,6 @@ body {
         grid-column: span 1;
         flex-direction: column;
         text-align: center;
-    }
-
-    .services-grid {
-        grid-template-columns: 1fr;
     }
 
     .cta-actions { flex-direction: column; align-items: center; }
