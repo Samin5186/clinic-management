@@ -398,12 +398,14 @@ body {
     color: #0f172a;
     font-weight: 700;
     margin-bottom: 4px;
+    text-align: center;
 }
 
 .bento-text p {
     color: #64748b;
     line-height: 1.6;
     font-size: 0.95rem;
+    text-align: center;
 }
 
 /* ============================================
@@ -498,103 +500,6 @@ body {
 }
 .bento-fuchsia::before { background: linear-gradient(135deg, #d946ef, #e879f9); }
 .bento-fuchsia:hover { border-color: #c026d3; box-shadow: 0 16px 48px rgba(217, 70, 239, 0.25); }
-
-/* ============================================
-   BASE SERVICE CARD STYLES
-   ============================================ */
-.service-card {
-    position: relative;
-    background: white;
-    border: 2px solid transparent;
-    border-radius: 16px;
-    padding: 28px 24px;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-.service-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-}
-.service-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    transition: all 0.3s ease;
-}
-.service-card:hover .service-icon {
-    transform: scale(1.1);
-}
-.service-card h4 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 6px;
-}
-.service-card p {
-    font-size: 0.9rem;
-    color: #64748b;
-    line-height: 1.5;
-}
-
-/* ============================================
-   COLORFUL SERVICE CARD VARIANTS
-   ============================================ */
-.service-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    border-radius: 16px 16px 0 0;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-.service-card:hover::before {
-    opacity: 1;
-}
-
-.service-blue { border-color: #3b82f6; }
-.service-blue::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-.service-blue:hover { border-color: #2563eb; box-shadow: 0 16px 48px rgba(59, 130, 246, 0.25); }
-.service-blue .service-icon { background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #2563eb; }
-
-.service-indigo { border-color: #6366f1; }
-.service-indigo::before { background: linear-gradient(90deg, #6366f1, #818cf8); }
-.service-indigo:hover { border-color: #4f46e5; box-shadow: 0 16px 48px rgba(99, 102, 241, 0.25); }
-.service-indigo .service-icon { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); color: #4f46e5; }
-
-.service-amber { border-color: #f59e0b; }
-.service-amber::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-.service-amber:hover { border-color: #d97706; box-shadow: 0 16px 48px rgba(245, 158, 11, 0.25); }
-.service-amber .service-icon { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #d97706; }
-
-.service-rose { border-color: #f43f5e; }
-.service-rose::before { background: linear-gradient(90deg, #f43f5e, #fb7185); }
-.service-rose:hover { border-color: #e11d48; box-shadow: 0 16px 48px rgba(244, 63, 94, 0.25); }
-.service-rose .service-icon { background: linear-gradient(135deg, #ffe4e6, #fecdd3); color: #e11d48; }
-
-.service-emerald { border-color: #10b981; }
-.service-emerald::before { background: linear-gradient(90deg, #10b981, #34d399); }
-.service-emerald:hover { border-color: #059669; box-shadow: 0 16px 48px rgba(16, 185, 129, 0.25); }
-.service-emerald .service-icon { background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669; }
-
-.service-violet { border-color: #8b5cf6; }
-.service-violet::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-.service-violet:hover { border-color: #7c3aed; box-shadow: 0 16px 48px rgba(139, 92, 246, 0.25); }
-.service-violet .service-icon { background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed; }
-
-.service-cyan { border-color: #06b6d4; }
-.service-cyan::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
-.service-cyan:hover { border-color: #0891b2; box-shadow: 0 16px 48px rgba(6, 182, 212, 0.25); }
-.service-cyan .service-icon { background: linear-gradient(135deg, #cffafe, #a5f3fc); color: #0891b2; }
-
-.service-lime { border-color: #84cc16; }
 .service-lime::before { background: linear-gradient(90deg, #84cc16, #a3e635); }
 .service-lime:hover { border-color: #65a30d; box-shadow: 0 16px 48px rgba(132, 204, 22, 0.25); }
 .service-lime .service-icon { background: linear-gradient(135deg, #ecfccb, #d9f99d); color: #65a30d; }
