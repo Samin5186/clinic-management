@@ -36,6 +36,9 @@ class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctor_profile')
     name_encrypted = models.TextField()
     medical_number = models.CharField(max_length=4, unique=True)
+    medical_id = models.CharField(max_length=10, unique=True, default='1000', help_text='Unique medical ID (e.g., 1001)')
+    specialty = models.CharField(max_length=100, default='General', help_text='Medical specialty (e.g., Cardiology)')
+    description = models.TextField(blank=True, default='', help_text='Short description of what the doctor treats')
     accepted_insurance = models.CharField(max_length=500, default='', blank=True, help_text='Comma-separated insurance keys the doctor accepts')
     created_at = models.DateTimeField(auto_now_add=True)
 

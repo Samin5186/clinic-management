@@ -7,7 +7,10 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Doctor)
 class DoctorAdmin(admin.ModelAdmin):
-    list_display = ['medical_number']
+    list_display = ['name', 'medical_id', 'specialty', 'medical_number']
+    list_filter = ['specialty']
+    search_fields = ['name_encrypted', 'medical_id', 'specialty']
+    readonly_fields = ['created_at']
 
 @admin.register(Patient)
 class PatientAdmin(admin.ModelAdmin):

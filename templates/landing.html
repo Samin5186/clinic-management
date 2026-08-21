@@ -277,6 +277,114 @@
             </div>
         </section>
 
+        <section id="our-doctors" class="our-doctors-section">
+            <button class="our-doctors-fab" id="ourDoctorsFab" aria-label="Our Doctors" aria-expanded="false">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span class="fab-tooltip">Our Doctors</span>
+            </button>
+
+            <div class="our-doctors-modal" id="ourDoctorsModal" role="dialog" aria-modal="true" aria-labelledby="ourDoctorsTitle" hidden>
+                <div class="our-doctors-backdrop" id="ourDoctorsBackdrop"></div>
+                <div class="our-doctors-panel">
+                    <header class="our-doctors-header">
+                        <h2 id="ourDoctorsTitle">Our Doctors</h2>
+                        <button class="our-doctors-close" id="ourDoctorsClose" aria-label="Close">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </header>
+                    <div class="our-doctors-grid">
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. David Maxwell</h3>
+                                <span class="doctor-specialty">Internal Medicine</span>
+                            </div>
+                            <div class="doctor-id">ID: 1001</div>
+                            <p class="doctor-desc">Treats seasonal and infectious diseases</p>
+                        </article>
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. Olivia Stone</h3>
+                                <span class="doctor-specialty">Neurology</span>
+                            </div>
+                            <div class="doctor-id">ID: 1002</div>
+                            <p class="doctor-desc">Manages headaches and migraines</p>
+                        </article>
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. Ethan Blake</h3>
+                                <span class="doctor-specialty">Orthopedics</span>
+                            </div>
+                            <div class="doctor-id">ID: 1003</div>
+                            <p class="doctor-desc">Treats back pain and joint disorders</p>
+                        </article>
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. Mia Harrison</h3>
+                                <span class="doctor-specialty">Cardiology</span>
+                            </div>
+                            <div class="doctor-id">ID: 1004</div>
+                            <p class="doctor-desc">Controls high blood pressure and heart conditions</p>
+                        </article>
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. Lucas Bennett</h3>
+                                <span class="doctor-specialty">Endocrinology</span>
+                            </div>
+                            <div class="doctor-id">ID: 1005</div>
+                            <p class="doctor-desc">Manages diabetes and blood sugar regulation</p>
+                        </article>
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. Amelia Clarke</h3>
+                                <span class="doctor-specialty">Psychiatry</span>
+                            </div>
+                            <div class="doctor-id">ID: 1006</div>
+                            <p class="doctor-desc">Treats anxiety and depression</p>
+                        </article>
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. Nathan Reid</h3>
+                                <span class="doctor-specialty">Dermatology</span>
+                            </div>
+                            <div class="doctor-id">ID: 1007</div>
+                            <p class="doctor-desc">Diagnoses skin rashes and allergies</p>
+                        </article>
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. Sophia Grant</h3>
+                                <span class="doctor-specialty">Gastroenterology</span>
+                            </div>
+                            <div class="doctor-id">ID: 1008</div>
+                            <p class="doctor-desc">Treats stomach and digestive issues</p>
+                        </article>
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. Daniel Hayes</h3>
+                                <span class="doctor-specialty">Pulmonology</span>
+                            </div>
+                            <div class="doctor-id">ID: 1009</div>
+                            <p class="doctor-desc">Controls asthma and respiratory problems</p>
+                        </article>
+                        <article class="doctor-card">
+                            <div class="doctor-header">
+                                <h3>Dr. Emma Foster</h3>
+                                <span class="doctor-specialty">Family Medicine</span>
+                            </div>
+                            <div class="doctor-id">ID: 1010</div>
+                            <p class="doctor-desc">Provides general check-ups and preventive care</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="landing-footer">
@@ -398,6 +506,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modal.hidden) closeModal();
+    });
+
+    // Our Doctors Modal
+    const doctorsFab = document.getElementById('ourDoctorsFab');
+    const doctorsModal = document.getElementById('ourDoctorsModal');
+    const doctorsBackdrop = document.getElementById('ourDoctorsBackdrop');
+    const doctorsCloseBtn = document.getElementById('ourDoctorsClose');
+
+    function openDoctorsModal() {
+        doctorsModal.hidden = false;
+        doctorsFab.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        doctorsCloseBtn.focus();
+    }
+
+    function closeDoctorsModal() {
+        doctorsModal.hidden = true;
+        doctorsFab.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        doctorsFab.focus();
+    }
+
+    doctorsFab.addEventListener('click', () => {
+        if (doctorsModal.hidden) openDoctorsModal();
+        else closeDoctorsModal();
+    });
+
+    doctorsCloseBtn.addEventListener('click', closeDoctorsModal);
+    doctorsBackdrop.addEventListener('click', closeDoctorsModal);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !doctorsModal.hidden) closeDoctorsModal();
     });
 });
 </script>
