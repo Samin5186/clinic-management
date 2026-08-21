@@ -172,6 +172,110 @@
             </div>
         </section>
 
+        <section id="health-tips" class="health-tips-section">
+            <button class="health-tips-fab" id="healthTipsFab" aria-label="How to Stay Healthier" aria-expanded="false">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                    <path d="M22 4L12 14.01l-3-3"/>
+                    <circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.2"/>
+                </svg>
+                <span class="fab-tooltip">How to Stay Healthier</span>
+            </button>
+
+            <div class="health-tips-modal" id="healthTipsModal" role="dialog" aria-modal="true" aria-labelledby="healthTipsTitle" hidden>
+                <div class="health-tips-backdrop" id="healthTipsBackdrop"></div>
+                <div class="health-tips-panel">
+                    <header class="health-tips-header">
+                        <h2 id="healthTipsTitle">How to Stay Healthier</h2>
+                        <button class="health-tips-close" id="healthTipsClose" aria-label="Close">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </header>
+                    <div class="health-tips-grid">
+                        <article class="health-tip-card green">
+                            <div class="health-tip-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
+                                    <path d="M12 16v-4"/>
+                                </svg>
+                            </div>
+                            <h3>Healthy Eating</h3>
+                            <p class="health-tip-desc">Nourish your body with balanced, wholesome nutrition every day.</p>
+                            <ul class="health-tip-list">
+                                <li>Fresh fruits and vegetables</li>
+                                <li>Drink enough water (8 glasses a day)</li>
+                                <li>Reduce sugar and salt</li>
+                                <li>Eat protein and dairy</li>
+                            </ul>
+                        </article>
+                        <article class="health-tip-card blue">
+                            <div class="health-tip-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M3 11v-3a9 9 0 0118 0v3"/>
+                                    <path d="M5 11l7-7 7 7"/>
+                                    <path d="M12 19v-7"/>
+                                    <path d="M8 14h8" stroke-linecap="round" stroke-dasharray="4 2"/>
+                                </svg>
+                            </div>
+                            <h3>Daily Exercise</h3>
+                            <p class="health-tip-desc">Move your body regularly to strengthen heart, muscles, and mind.</p>
+                            <ul class="health-tip-list">
+                                <li>Daily walking (30 minutes)</li>
+                                <li>Stretching or yoga</li>
+                                <li>Aerobic exercise (at least 3 times a week)</li>
+                            </ul>
+                        </article>
+                        <article class="health-tip-card teal">
+                            <div class="health-tip-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                                    <path d="M22 4L12 14.01l-3-3"/>
+                                    <path d="M12 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                            </div>
+                            <h3>Good Habits</h3>
+                            <p class="health-tip-desc">Small daily choices build a foundation for lifelong wellness.</p>
+                            <ul class="health-tip-list">
+                                <li>Enough sleep (7–8 hours)</li>
+                                <li>Stress management (meditation or deep breathing)</li>
+                                <li>No smoking</li>
+                                <li>Regular annual check-ups</li>
+                            </ul>
+                        </article>
+                        <article class="health-tip-card emerald">
+                            <div class="health-tip-icon">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    <path d="M12 9v6" stroke-linecap="round"/>
+                                    <circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.15"/>
+                                </svg>
+                            </div>
+                            <h3>Healthy Foods</h3>
+                            <p class="health-tip-desc">Nature's superfoods to boost immunity and vitality naturally.</p>
+                            <ul class="health-tip-list">
+                                <li>Honey</li>
+                                <li>Garlic</li>
+                                <li>Ginger</li>
+                                <li>Probiotic yogurt</li>
+                                <li>Walnuts and almonds</li>
+                            </ul>
+                        </article>
+                    </div>
+                    <blockquote class="health-tip-quote">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1H1c0 .5 0 1 1 1h12v-1c0-1 0-2 1-2h1"/>
+                            <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3"/>
+                        </svg>
+                        <p>"Health is a choice, not a chance."</p>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
 
     </main>
 
@@ -263,6 +367,38 @@ function initTabs() {
 document.addEventListener('DOMContentLoaded', () => {
     renderConditions('all');
     initTabs();
+
+    // Health Tips Modal
+    const fab = document.getElementById('healthTipsFab');
+    const modal = document.getElementById('healthTipsModal');
+    const backdrop = document.getElementById('healthTipsBackdrop');
+    const closeBtn = document.getElementById('healthTipsClose');
+
+    function openModal() {
+        modal.hidden = false;
+        fab.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        closeBtn.focus();
+    }
+
+    function closeModal() {
+        modal.hidden = true;
+        fab.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        fab.focus();
+    }
+
+    fab.addEventListener('click', () => {
+        if (modal.hidden) openModal();
+        else closeModal();
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+    });
 });
 </script>
 {% endblock %}

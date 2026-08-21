@@ -1015,6 +1015,372 @@ body {
 .btn-block { width: 100%; }
 
 /* ============================================
+   HEALTH TIPS SECTION (Floating Modal)
+   ============================================ */
+.health-tips-section {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.health-tips-fab {
+    pointer-events: auto;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.health-tips-fab:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 12px 32px rgba(16, 185, 129, 0.5);
+}
+
+.health-tips-fab:focus-visible {
+    outline: 3px solid #10b981;
+    outline-offset: 3px;
+}
+
+.health-tips-fab[aria-expanded="true"] {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+}
+
+.health-tips-fab[aria-expanded="true"]:hover {
+    box-shadow: 0 12px 32px rgba(239, 68, 68, 0.5);
+}
+
+.fab-tooltip {
+    position: absolute;
+    right: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1e3a8a;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-50%) translateX(10px);
+    transition: all 0.25s ease;
+    pointer-events: none;
+}
+
+.fab-tooltip::after {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: #1e3a8a;
+}
+
+.health-tips-fab:hover .fab-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0);
+}
+
+.health-tips-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.health-tips-modal:not([hidden]) {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.health-tips-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.health-tips-modal:not([hidden]) .health-tips-backdrop {
+    opacity: 1;
+}
+
+.health-tips-panel {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    max-height: 90vh;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.health-tips-modal:not([hidden]) .health-tips-panel {
+    transform: scale(1) translateY(0);
+}
+
+.health-tips-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, #f8fafc, #ffffff);
+}
+
+.health-tips-header h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    background: linear-gradient(135deg, #10b981, #0ea5e9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.health-tips-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    background: #f1f5f9;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.health-tips-close:hover {
+    background: #e2e8f0;
+    color: #1e3a8a;
+    transform: rotate(90deg);
+}
+
+.health-tips-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding: 32px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.health-tip-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.health-tip-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.health-tip-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-color: transparent;
+}
+
+.health-tip-card:hover::before {
+    opacity: 1;
+}
+
+.health-tip-card.green { border-color: #10b981; }
+.health-tip-card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+.health-tip-card.green:hover { box-shadow: 0 24px 48px rgba(16, 185, 129, 0.25); }
+
+.health-tip-card.blue { border-color: #3b82f6; }
+.health-tip-card.blue::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.health-tip-card.blue:hover { box-shadow: 0 24px 48px rgba(59, 130, 246, 0.25); }
+
+.health-tip-card.teal { border-color: #14b8a6; }
+.health-tip-card.teal::before { background: linear-gradient(90deg, #14b8a6, #2dd4bf); }
+.health-tip-card.teal:hover { box-shadow: 0 24px 48px rgba(20, 184, 166, 0.25); }
+
+.health-tip-card.emerald { border-color: #10b981; }
+.health-tip-card.emerald::before { background: linear-gradient(90deg, #10b981, #34d399); }
+.health-tip-card.emerald:hover { box-shadow: 0 24px 48px rgba(16, 185, 129, 0.25); }
+
+.health-tip-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.health-tip-card.green .health-tip-icon { background: #d1fae5; color: #059669; }
+.health-tip-card.blue .health-tip-icon { background: #dbeafe; color: #2563eb; }
+.health-tip-card.teal .health-tip-icon { background: #ccfbf1; color: #0d9488; }
+.health-tip-card.emerald .health-tip-icon { background: #d1fae5; color: #059669; }
+
+.health-tip-card:hover .health-tip-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.health-tip-card h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.health-tip-desc {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.health-tip-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.health-tip-list li {
+    position: relative;
+    padding-left: 22px;
+    font-size: 0.85rem;
+    color: #475569;
+    line-height: 1.5;
+}
+
+.health-tip-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.4;
+}
+
+.health-tip-card.green .health-tip-list li::before { color: #10b981; }
+.health-tip-card.blue .health-tip-list li::before { color: #3b82f6; }
+.health-tip-card.teal .health-tip-list li::before { color: #14b8a6; }
+.health-tip-card.emerald .health-tip-list li::before { color: #10b981; }
+
+.health-tip-quote {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 24px 32px;
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border-top: 1px solid #e2e8f0;
+    border-radius: 0 0 24px 24px;
+    margin: 0 -1px -1px -1px;
+}
+
+.health-tip-quote svg {
+    color: #10b981;
+    flex-shrink: 0;
+    opacity: 0.6;
+}
+
+.health-tip-quote p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #374151;
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .health-tips-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .health-tips-section {
+        bottom: 20px;
+        right: 20px;
+    }
+    .health-tips-fab {
+        width: 56px;
+        height: 56px;
+    }
+    .health-tips-panel {
+        max-height: 95vh;
+        border-radius: 20px 20px 0 0;
+    }
+    .health-tips-grid {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 16px;
+    }
+    .health-tips-header {
+        padding: 20px 24px;
+    }
+    .health-tip-quote {
+        padding: 20px 24px;
+        border-radius: 0 0 20px 20px;
+    }
+    .health-tip-quote p { font-size: 1rem; }
+    .fab-tooltip { display: none; }
+}
+
+/* ============================================
    FOOTER
    ============================================ */
 .landing-footer {
