@@ -333,6 +333,16 @@ body {
     padding: 36px 32px;
 }
 
+/* Full width card — spans all columns */
+.bento-full {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 16px 24px;
+}
+
 .bento-wide .bento-icon {
     font-size: 3.5rem;
     flex-shrink: 0;
