@@ -1431,7 +1431,7 @@ body {
     position: absolute;
     left: calc(100% + 12px);
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%) translateX(-10px);
     background: #1e3a8a;
     color: white;
     padding: 8px 14px;
@@ -1441,9 +1441,9 @@ body {
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-50%) translateX(-10px);
     transition: all 0.25s ease;
     pointer-events: none;
+    z-index: 1001;
 }
 
 .our-doctors-fab .fab-tooltip::after {
@@ -1632,6 +1632,130 @@ body {
     line-height: 1.5;
     margin: 0;
     flex: 1;
+}
+
+.doctor-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.doctor-card:hover .doctor-avatar {
+    transform: scale(1.1) rotate(3deg);
+}
+
+.doctor-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 8px;
+    width: fit-content;
+}
+
+/* Specialty-specific color variants */
+.doctor-card.internal-medicine {
+    border-color: #10b981;
+}
+.doctor-card.internal-medicine::before { background: linear-gradient(90deg, #10b981, #34d399); }
+.doctor-card.internal-medicine:hover { box-shadow: 0 24px 48px rgba(16, 185, 129, 0.25); }
+.doctor-card.internal-medicine .doctor-specialty { color: #10b981; }
+.doctor-card.internal-medicine .doctor-avatar { background: #d1fae5; color: #059669; }
+.doctor-card.internal-medicine .doctor-badge { background: #d1fae5; color: #059669; }
+
+.doctor-card.neurology {
+    border-color: #8b5cf6;
+}
+.doctor-card.neurology::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+.doctor-card.neurology:hover { box-shadow: 0 24px 48px rgba(139, 92, 246, 0.25); }
+.doctor-card.neurology .doctor-specialty { color: #8b5cf6; }
+.doctor-card.neurology .doctor-avatar { background: #ede9fe; color: #7c3aed; }
+.doctor-card.neurology .doctor-badge { background: #ede9fe; color: #7c3aed; }
+
+.doctor-card.orthopedics {
+    border-color: #f59e0b;
+}
+.doctor-card.orthopedics::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.doctor-card.orthopedics:hover { box-shadow: 0 24px 48px rgba(245, 158, 11, 0.25); }
+.doctor-card.orthopedics .doctor-specialty { color: #f59e0b; }
+.doctor-card.orthopedics .doctor-avatar { background: #fef3c7; color: #d97706; }
+.doctor-card.orthopedics .doctor-badge { background: #fef3c7; color: #d97706; }
+
+.doctor-card.cardiology {
+    border-color: #ef4444;
+}
+.doctor-card.cardiology::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+.doctor-card.cardiology:hover { box-shadow: 0 24px 48px rgba(239, 68, 68, 0.25); }
+.doctor-card.cardiology .doctor-specialty { color: #ef4444; }
+.doctor-card.cardiology .doctor-avatar { background: #fee2e2; color: #dc2626; }
+.doctor-card.cardiology .doctor-badge { background: #fee2e2; color: #dc2626; }
+
+.doctor-card.endocrinology {
+    border-color: #06b6d4;
+}
+.doctor-card.endocrinology::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+.doctor-card.endocrinology:hover { box-shadow: 0 24px 48px rgba(6, 182, 212, 0.25); }
+.doctor-card.endocrinology .doctor-specialty { color: #06b6d4; }
+.doctor-card.endocrinology .doctor-avatar { background: #cffafe; color: #0891b2; }
+.doctor-card.endocrinology .doctor-badge { background: #cffafe; color: #0891b2; }
+
+.doctor-card.psychiatry {
+    border-color: #ec4899;
+}
+.doctor-card.psychiatry::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+.doctor-card.psychiatry:hover { box-shadow: 0 24px 48px rgba(236, 72, 153, 0.25); }
+.doctor-card.psychiatry .doctor-specialty { color: #ec4899; }
+.doctor-card.psychiatry .doctor-avatar { background: #fce7f3; color: #db2777; }
+.doctor-card.psychiatry .doctor-badge { background: #fce7f3; color: #db2777; }
+
+.doctor-card.dermatology {
+    border-color: #06b6d4;
+}
+.doctor-card.dermatology::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+.doctor-card.dermatology:hover { box-shadow: 0 24px 48px rgba(6, 182, 212, 0.25); }
+.doctor-card.dermatology .doctor-specialty { color: #06b6d4; }
+.doctor-card.dermatology .doctor-avatar { background: #cffafe; color: #0891b2; }
+.doctor-card.dermatology .doctor-badge { background: #cffafe; color: #0891b2; }
+
+.doctor-card.gastroenterology {
+    border-color: #84cc16;
+}
+.doctor-card.gastroenterology::before { background: linear-gradient(90deg, #84cc16, #a3e635); }
+.doctor-card.gastroenterology:hover { box-shadow: 0 24px 48px rgba(132, 204, 22, 0.25); }
+.doctor-card.gastroenterology .doctor-specialty { color: #84cc16; }
+.doctor-card.gastroenterology .doctor-avatar { background: #ecfccb; color: #65a30d; }
+.doctor-card.gastroenterology .doctor-badge { background: #ecfccb; color: #65a30d; }
+
+.doctor-card.pulmonology {
+    border-color: #0ea5e9;
+}
+.doctor-card.pulmonology::before { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+.doctor-card.pulmonology:hover { box-shadow: 0 24px 48px rgba(14, 165, 233, 0.25); }
+.doctor-card.pulmonology .doctor-specialty { color: #0ea5e9; }
+.doctor-card.pulmonology .doctor-avatar { background: #e0f2fe; color: #0284c7; }
+.doctor-card.pulmonology .doctor-badge { background: #e0f2fe; color: #0284c7; }
+
+.doctor-card.family-medicine {
+    border-color: #3b82f6;
+}
+.doctor-card.family-medicine::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.doctor-card.family-medicine:hover { box-shadow: 0 24px 48px rgba(59, 130, 246, 0.25); }
+.doctor-card.family-medicine .doctor-specialty { color: #3b82f6; }
+.doctor-card.family-medicine .doctor-avatar { background: #dbeafe; color: #2563eb; }
+.doctor-card.family-medicine .doctor-badge { background: #dbeafe; color: #2563eb; }
+
+.doctors-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+    margin: 0 0 8px 0;
 }
 
 /* Responsive */

@@ -293,6 +293,7 @@
                 <div class="our-doctors-panel">
                     <header class="our-doctors-header">
                         <h2 id="ourDoctorsTitle">Our Doctors</h2>
+                        <p class="doctors-subtitle">10 specialists ready to care for you</p>
                         <button class="our-doctors-close" id="ourDoctorsClose" aria-label="Close">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M18 6L6 18M6 6l12 12"/>
@@ -300,85 +301,169 @@
                         </button>
                     </header>
                     <div class="our-doctors-grid">
-                        <article class="doctor-card">
+                        <article class="doctor-card internal-medicine">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                                    <path d="M12 6v6l4 2"/>
+                                    <circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.15"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. David Maxwell</h3>
                                 <span class="doctor-specialty">Internal Medicine</span>
                             </div>
                             <div class="doctor-id">ID: 1001</div>
                             <p class="doctor-desc">Treats seasonal and infectious diseases</p>
+                            <div class="doctor-badge">General Care</div>
                         </article>
-                        <article class="doctor-card">
+                        <article class="doctor-card neurology">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/>
+                                    <path d="M12 16v-4M12 8h.01"/>
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. Olivia Stone</h3>
                                 <span class="doctor-specialty">Neurology</span>
                             </div>
                             <div class="doctor-id">ID: 1002</div>
                             <p class="doctor-desc">Manages headaches and migraines</p>
+                            <div class="doctor-badge">Brain & Nerves</div>
                         </article>
-                        <article class="doctor-card">
+                        <article class="doctor-card orthopedics">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+                                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                                    <path d="M8 14h8" stroke-linecap="round"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. Ethan Blake</h3>
                                 <span class="doctor-specialty">Orthopedics</span>
                             </div>
                             <div class="doctor-id">ID: 1003</div>
                             <p class="doctor-desc">Treats back pain and joint disorders</p>
+                            <div class="doctor-badge">Bones & Joints</div>
                         </article>
-                        <article class="doctor-card">
+                        <article class="doctor-card cardiology">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                                    <path d="M12 6v6l4 2"/>
+                                    <path d="M12 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="currentColor" opacity="0.15"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. Mia Harrison</h3>
                                 <span class="doctor-specialty">Cardiology</span>
                             </div>
                             <div class="doctor-id">ID: 1004</div>
                             <p class="doctor-desc">Controls high blood pressure and heart conditions</p>
+                            <div class="doctor-badge">Heart Health</div>
                         </article>
-                        <article class="doctor-card">
+                        <article class="doctor-card endocrinology">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    <path d="M12 9v6" stroke-linecap="round"/>
+                                    <circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.15"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. Lucas Bennett</h3>
                                 <span class="doctor-specialty">Endocrinology</span>
                             </div>
                             <div class="doctor-id">ID: 1005</div>
                             <p class="doctor-desc">Manages diabetes and blood sugar regulation</p>
+                            <div class="doctor-badge">Hormones & Sugar</div>
                         </article>
-                        <article class="doctor-card">
+                        <article class="doctor-card psychiatry">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                    <path d="M6 9l-3 3 3 3"/>
+                                    <circle cx="9" cy="9" r="3" fill="currentColor" opacity="0.15"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. Amelia Clarke</h3>
                                 <span class="doctor-specialty">Psychiatry</span>
                             </div>
                             <div class="doctor-id">ID: 1006</div>
                             <p class="doctor-desc">Treats anxiety and depression</p>
+                            <div class="doctor-badge">Mental Wellness</div>
                         </article>
-                        <article class="doctor-card">
+                        <article class="doctor-card dermatology">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>
+                                    <path d="M8 16h8" stroke-linecap="round"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. Nathan Reid</h3>
                                 <span class="doctor-specialty">Dermatology</span>
                             </div>
                             <div class="doctor-id">ID: 1007</div>
                             <p class="doctor-desc">Diagnoses skin rashes and allergies</p>
+                            <div class="doctor-badge">Skin Health</div>
                         </article>
-                        <article class="doctor-card">
+                        <article class="doctor-card gastroenterology">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                                    <path d="M12 6v6l4 2"/>
+                                    <path d="M9 14h6"/>
+                                    <path d="M12 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" fill="currentColor" opacity="0.1"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. Sophia Grant</h3>
                                 <span class="doctor-specialty">Gastroenterology</span>
                             </div>
                             <div class="doctor-id">ID: 1008</div>
                             <p class="doctor-desc">Treats stomach and digestive issues</p>
+                            <div class="doctor-badge">Digestive Health</div>
                         </article>
-                        <article class="doctor-card">
+                        <article class="doctor-card pulmonology">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M3 11v-3a9 9 0 0118 0v3"/>
+                                    <path d="M5 11l7-7 7 7"/>
+                                    <path d="M12 19v-7"/>
+                                    <path d="M8 14h8" stroke-linecap="round" stroke-dasharray="4 2"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. Daniel Hayes</h3>
                                 <span class="doctor-specialty">Pulmonology</span>
                             </div>
                             <div class="doctor-id">ID: 1009</div>
                             <p class="doctor-desc">Controls asthma and respiratory problems</p>
+                            <div class="doctor-badge">Lungs & Breathing</div>
                         </article>
-                        <article class="doctor-card">
+                        <article class="doctor-card family-medicine">
+                            <div class="doctor-avatar">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
                             <div class="doctor-header">
                                 <h3>Dr. Emma Foster</h3>
                                 <span class="doctor-specialty">Family Medicine</span>
                             </div>
                             <div class="doctor-id">ID: 1010</div>
                             <p class="doctor-desc">Provides general check-ups and preventive care</p>
+                            <div class="doctor-badge">Family Care</div>
                         </article>
                     </div>
                 </div>
