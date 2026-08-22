@@ -3291,6 +3291,8 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
+.visit-row-equal .visit-col { min-height: 0; }
+.visit-row-equal .visit-card { flex: 1; }
 .visit-col {
     display: flex;
     flex-direction: column;
