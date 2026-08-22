@@ -1069,7 +1069,8 @@ body {
 }
 
 /* Pill-expanding FAB labels */
-.health-tips-fab .fab-label {
+.health-tips-fab .fab-label,
+.our-doctors-fab .fab-label {
     max-width: 0;
     opacity: 0;
     white-space: nowrap;
@@ -1080,7 +1081,8 @@ body {
     pointer-events: none;
 }
 
-.health-tips-fab:hover .fab-icon {
+.health-tips-fab:hover .fab-icon,
+.our-doctors-fab:hover .fab-icon {
     transform: none;
 }
 
@@ -1391,38 +1393,169 @@ body {
 }
 
 /* ============================================
-   OUR DOCTORS SECTION
+   OUR DOCTORS FAB + MODAL
    ============================================ */
 .our-doctors-section {
-    padding: 80px 32px 60px;
-    max-width: 1200px;
-    margin: 0 auto;
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+    z-index: 1000;
+    pointer-events: none;
 }
 
-.our-doctors-section .our-doctors-header {
-    text-align: center;
-    margin-bottom: 48px;
+.our-doctors-fab {
+    pointer-events: auto;
+    width: 68px;
+    min-width: 68px;
+    height: 68px;
+    border-radius: 100px;
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 20px;
+    gap: 0;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    animation: doctorsFabGlow 2.5s ease-in-out infinite;
 }
 
-.our-doctors-section .our-doctors-header h3 {
-    font-size: 2rem;
+@keyframes doctorsFabGlow {
+    0%, 100% { box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45), 0 0 0 0 rgba(59, 130, 246, 0.4); }
+    50% { box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45), 0 0 0 10px rgba(59, 130, 246, 0); }
+}
+
+.our-doctors-fab:hover {
+    width: 190px;
+    transform: scale(1.04);
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.5);
+    animation: fabPulseBlue 1.6s ease-in-out infinite;
+}
+
+.our-doctors-fab:hover .fab-label {
+    max-width: 140px;
+    opacity: 1;
+    margin-left: 12px;
+}
+
+.our-doctors-fab:focus-visible {
+    outline: 3px solid #3b82f6;
+    outline-offset: 3px;
+}
+
+.our-doctors-fab[aria-expanded="true"] {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+}
+
+.our-doctors-fab[aria-expanded="true"]:hover {
+    box-shadow: 0 12px 32px rgba(239, 68, 68, 0.5);
+}
+
+.our-doctors-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.our-doctors-modal:not([hidden]) {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.our-doctors-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.our-doctors-modal:not([hidden]) .our-doctors-backdrop {
+    opacity: 1;
+}
+
+.our-doctors-panel {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 90vh;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.our-doctors-modal:not([hidden]) .our-doctors-panel {
+    transform: scale(1) translateY(0);
+}
+
+.our-doctors-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, #eff6ff, #ffffff);
+}
+
+.our-doctors-panel-header h2 {
+    font-size: 1.5rem;
     font-weight: 800;
-    color: #0f172a;
-    margin: 8px 0 12px;
+    margin: 0;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.our-doctors-section .our-doctors-header p {
-    font-size: 1.05rem;
+.our-doctors-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    background: #f1f5f9;
     color: #64748b;
-    max-width: 520px;
-    margin: 0 auto;
-    line-height: 1.6;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.our-doctors-close:hover {
+    background: #e2e8f0;
+    color: #1e3a8a;
+    transform: rotate(90deg);
 }
 
 .our-doctors-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
+    gap: 20px;
+    padding: 32px;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .doctor-card {
@@ -1638,17 +1771,24 @@ body {
 
 @media (max-width: 600px) {
     .our-doctors-section {
-        padding: 60px 20px 40px;
+        bottom: 20px;
+        left: 20px;
     }
-    .our-doctors-section .our-doctors-header h3 {
-        font-size: 1.6rem;
+    .our-doctors-fab {
+        width: 56px;
+        height: 56px;
+    }
+    .our-doctors-panel {
+        max-height: 95vh;
+        border-radius: 20px 20px 0 0;
     }
     .our-doctors-grid {
         grid-template-columns: 1fr;
+        padding: 20px;
         gap: 16px;
     }
-    .doctor-card {
-        padding: 24px 20px;
+    .our-doctors-panel-header {
+        padding: 20px 24px;
     }
 }
 

@@ -17,7 +17,6 @@
             </a>
             <div class="nav-links">
                 <a href="#features">Features</a>
-                <a href="#our-doctors">Our Doctors</a>
                 <a href="#how-it-works">How It Works</a>
             </div>
         </div>
@@ -276,12 +275,29 @@
         </section>
 
         <section id="our-doctors" class="our-doctors-section">
-            <div class="our-doctors-header">
-                <span class="section-tag">Meet Our Team</span>
-                <h3>Our Doctors</h3>
-                <p>Our team of experienced specialists is dedicated to providing you with the best care possible</p>
-            </div>
-            <div class="our-doctors-grid">
+            <button class="our-doctors-fab" id="ourDoctorsFab" aria-label="Our Doctors" aria-expanded="false">
+                <svg class="fab-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span class="fab-label">Our Doctors</span>
+            </button>
+
+            <div class="our-doctors-modal" id="ourDoctorsModal" role="dialog" aria-modal="true" aria-labelledby="ourDoctorsTitle" hidden>
+                <div class="our-doctors-backdrop" id="ourDoctorsBackdrop"></div>
+                <div class="our-doctors-panel">
+                    <header class="our-doctors-panel-header">
+                        <div class="our-doctors-panel-header-text">
+                            <h2 id="ourDoctorsTitle">Our Doctors</h2>
+                            <p class="doctors-subtitle">10 specialists ready to care for you</p>
+                        </div>
+                        <button class="our-doctors-close" id="ourDoctorsClose" aria-label="Close">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </header>
+                    <div class="our-doctors-grid">
                 <article class="doctor-card internal-medicine">
                     <div class="doctor-avatar">
                         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -432,6 +448,8 @@
                     <p class="doctor-desc">Provides general check-ups and preventive care</p>
                     <div class="doctor-badge">Family Care</div>
                 </article>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -454,7 +472,6 @@
                 <div class="footer-col">
                     <h5>Product</h5>
                     <a href="#features">Features</a>
-                    <a href="#our-doctors">Our Doctors</a>
                     <a href="#how-it-works">How It Works</a>
                     <a href="{% url 'register' %}">Register</a>
                 </div>
@@ -557,6 +574,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modal.hidden) closeModal();
+    });
+
+    // Our Doctors Modal
+    const doctorsFab = document.getElementById('ourDoctorsFab');
+    const doctorsModal = document.getElementById('ourDoctorsModal');
+    const doctorsBackdrop = document.getElementById('ourDoctorsBackdrop');
+    const doctorsCloseBtn = document.getElementById('ourDoctorsClose');
+
+    function openDoctorsModal() {
+        doctorsModal.hidden = false;
+        doctorsFab.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        doctorsCloseBtn.focus();
+    }
+
+    function closeDoctorsModal() {
+        doctorsModal.hidden = true;
+        doctorsFab.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        doctorsFab.focus();
+    }
+
+    doctorsFab.addEventListener('click', () => {
+        if (doctorsModal.hidden) openDoctorsModal();
+        else closeDoctorsModal();
+    });
+
+    doctorsCloseBtn.addEventListener('click', closeDoctorsModal);
+    doctorsBackdrop.addEventListener('click', closeDoctorsModal);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !doctorsModal.hidden) closeDoctorsModal();
     });
 
 });
