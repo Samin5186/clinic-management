@@ -3314,6 +3314,7 @@ body {
     transition: border-color 0.2s;
     background: #f8fafc;
 }
+.visit-input-sm { padding: 6px 8px; font-size: 0.82rem; }
 .visit-input:focus, .visit-select:focus, .visit-textarea:focus {
     outline: none;
     border-color: #1e3a8a;
