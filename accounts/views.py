@@ -573,9 +573,11 @@ def doctor_appointments(request):
     today = dt_date.today()
     for g in grouped.values():
         g['is_past'] = bool(g['date'] and g['date'] < today)
+        g['is_today'] = bool(g['date'] and g['date'] == today)
         g['done_count'] = sum(1 for a in g['appointments'] if a['is_completed'])
+        g['appointments'].sort(key=lambda a: a['time'], reverse=True)
 
-    sorted_days = sorted(grouped.values(), key=lambda x: x['date'] if x['date'] else dt_date.max)
+    sorted_days = sorted(grouped.values(), key=lambda x: x['date'] if x['date'] else dt_date.max, reverse=True)
 
     return render(request, 'appointments/doctor_appointments.html', {
         'doctor': doctor,
