@@ -984,3 +984,91 @@ def doctor_insurance_settings(request):
         'doctor': doctor,
         'insurance_choices': INSURANCE_CHOICES,
     })
+
+
+@login_required
+def doctor_patient_visit(request, appointment_id):
+    if not hasattr(request.user, 'doctor_profile'):
+        messages.error(request, 'Access denied.')
+        return redirect('home')
+
+    doctor = request.user.doctor_profile
+    try:
+        appointment = Appointment.objects.get(id=appointment_id, doctor=doctor)
+    except Appointment.DoesNotExist:
+        messages.error(request, 'Appointment not found.')
+        return redirect('doctor_appointments')
+
+    patient = appointment.patient
+
+    visit, _ = PatientVisit.objects.get_or_create(
+        appointment=appointment,
+        doctor=doctor,
+        patient=patient,
+        defaults={'blood_type': '', 'allergies': '', 'disease_history': ''},
+    )
+
+    past_visits = PatientVisit.objects.filter(
+        doctor=doctor, patient=patient, is_completed=True
+    ).order_by('-visited_at')[:10]
+
+    medications = Medication.objects.filter(patient=patient)
+    health_readings = HealthReading.objects.filter(patient=patient).order_by('-created_at')[:20]
+
+    if request.method == 'POST':
+        action = request.POST.get('action', '')
+
+        if action == 'save_info':
+            visit.blood_type = request.POST.get('blood_type', '').strip()
+            visit.allergies = request.POST.get('allergies', '').strip()
+            visit.disease_history = request.POST.get('disease_history', '').strip()
+            visit.notes = request.POST.get('notes', '').strip()
+            visit.save()
+            messages.success(request, 'Patient info saved.')
+
+        elif action == 'upload_record':
+            title = request.POST.get('record_title', '').strip()
+            file = request.FILES.get('record_file')
+            if title and file:
+                MedicalRecord.objects.create(visit=visit, title=title, file=file)
+                messages.success(request, f'Record "{title}" uploaded.')
+            else:
+                messages.error(request, 'Title and file are required.')
+
+        elif action == 'add_prescription':
+            text = request.POST.get('prescription_text', '').strip()
+            file = request.FILES.get('prescription_file')
+            if text or file:
+                Prescription.objects.create(visit=visit, text=text, file=file)
+                messages.success(request, 'Prescription added.')
+            else:
+                messages.error(request, 'Enter prescription text or upload a file.')
+
+        elif action == 'mark_visited':
+            visit.is_completed = True
+            from django.utils import timezone as tz
+            visit.visited_at = tz.now()
+            visit.blood_type = request.POST.get('blood_type', visit.blood_type).strip()
+            visit.allergies = request.POST.get('allergies', visit.allergies).strip()
+            visit.disease_history = request.POST.get('disease_history', visit.disease_history).strip()
+            visit.notes = request.POST.get('notes', visit.notes).strip()
+            visit.save()
+            messages.success(request, f'Visit with {patient.full_name} marked as completed.')
+            return redirect('doctor_appointments')
+
+        return redirect('doctor_patient_visit', appointment_id=appointment_id)
+
+    records = visit.medical_records.all()
+    prescriptions = visit.prescriptions.all()
+
+    return render(request, 'appointments/doctor_patient_visit.html', {
+        'doctor': doctor,
+        'appointment': appointment,
+        'patient': patient,
+        'visit': visit,
+        'past_visits': past_visits,
+        'medications': medications,
+        'health_readings': health_readings,
+        'records': records,
+        'prescriptions': prescriptions,
+    })

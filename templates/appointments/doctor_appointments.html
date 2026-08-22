@@ -48,7 +48,7 @@
                 </div>
                 <div class="doctor-appt-list">
                     {% for appt in day.appointments %}
-                    <div class="doctor-appt-card">
+                    <a href="{% url 'doctor_patient_visit' appt.id %}" class="doctor-appt-card doctor-appt-link">
                         <div class="doctor-appt-time">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                             {{ appt.time }}
@@ -65,7 +65,10 @@
                                 <span class="doctor-appt-label">Reason:</span> {{ appt.reason }}
                             </div>
                         </div>
-                    </div>
+                        <div class="doctor-appt-arrow">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
                     {% endfor %}
                 </div>
             </div>

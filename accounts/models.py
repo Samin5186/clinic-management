@@ -248,3 +248,39 @@ class HealthReading(models.Model):
 
     def __str__(self):
         return f"{self.patient.full_name} - {self.get_reading_type_display()} ({self.year}/{self.month}/{self.day})"
+
+
+class PatientVisit(models.Model):
+    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name='visit', null=True, blank=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='visits')
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='visits')
+    blood_type = models.CharField(max_length=5, default='', blank=True)
+    allergies = models.TextField(default='', blank=True, help_text='Known allergies')
+    disease_history = models.TextField(default='', blank=True, help_text='Past diseases and conditions')
+    notes = models.TextField(default='', blank=True, help_text='Doctor notes for this visit')
+    is_completed = models.BooleanField(default=False)
+    visited_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Visit: {self.patient.full_name} by Dr. {self.doctor.name} ({self.created_at.strftime('%Y-%m-%d')})"
+
+
+class MedicalRecord(models.Model):
+    visit = models.ForeignKey(PatientVisit, on_delete=models.CASCADE, related_name='medical_records')
+    title = models.CharField(max_length=200)
+    file = models.FileField(upload_to='medical_records/%Y/%m/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Prescription(models.Model):
+    visit = models.ForeignKey(PatientVisit, on_delete=models.CASCADE, related_name='prescriptions')
+    text = models.TextField(default='', blank=True, help_text='Typed prescription text')
+    file = models.FileField(upload_to='prescriptions/%Y/%m/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Prescription for {self.visit.patient.full_name}"
