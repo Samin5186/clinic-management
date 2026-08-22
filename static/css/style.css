@@ -3324,6 +3324,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 340px;
     gap: 20px;
+    align-items: stretch;
 }
 .visit-row {
     display: contents;
