@@ -73,7 +73,7 @@
 
         <div class="visit-grid">
             <div class="visit-row">
-                <div class="visit-col">
+                <div class="visit-col visit-col-info">
                     <div class="visit-card">
                         <h2 class="visit-section-title">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -282,5 +282,18 @@ document.querySelectorAll('.visit-file-input').forEach(function(input) {
         }
     });
 });
+
+(function () {
+    var info = document.querySelector('.visit-col-info .visit-card');
+    var side = document.querySelector('.visit-col-fixed');
+    if (!info || !side) return;
+    function syncSide() {
+        if (window.innerWidth <= 768) { side.style.height = ''; return; }
+        side.style.height = info.offsetHeight + 'px';
+    }
+    syncSide();
+    window.addEventListener('load', syncSide);
+    window.addEventListener('resize', syncSide);
+})();
 </script>
 {% endblock %}

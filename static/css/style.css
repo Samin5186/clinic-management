@@ -3334,7 +3334,7 @@ body {
     flex-direction: column;
     gap: 16px;
 }
-.visit-col-fixed { min-height: 0; }
+.visit-col-fixed { min-height: 0; overflow: hidden; }
 .visit-col-fixed .visit-card {
     flex: 1;
     display: flex;
