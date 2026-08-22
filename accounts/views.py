@@ -521,7 +521,7 @@ def doctor_appointments(request):
         return redirect('home')
 
     doctor = request.user.doctor_profile
-    appointments = Appointment.objects.filter(doctor=doctor, is_cancelled=False).order_by('year', 'month', 'day', 'hour')
+    appointments = Appointment.objects.filter(doctor=doctor, is_cancelled=False).select_related('visit').order_by('year', 'month', 'day', 'hour')
 
     grouped = {}
     day_names = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'}
@@ -555,6 +555,11 @@ def doctor_appointments(request):
         except Exception:
             insurance = 'Unknown'
 
+        try:
+            is_completed = bool(appt.visit.is_completed)
+        except Exception:
+            is_completed = False
+
         grouped[key]['appointments'].append({
             'id': appt.id,
             'patient_name': appt.patient_name,
@@ -562,7 +567,13 @@ def doctor_appointments(request):
             'time': f"{appt.hour:02d}:{appt.minute:02d}",
             'reason': appt.reason,
             'insurance': insurance,
+            'is_completed': is_completed,
         })
+
+    today = dt_date.today()
+    for g in grouped.values():
+        g['is_past'] = bool(g['date'] and g['date'] < today)
+        g['done_count'] = sum(1 for a in g['appointments'] if a['is_completed'])
 
     sorted_days = sorted(grouped.values(), key=lambda x: x['date'] if x['date'] else dt_date.max)
 

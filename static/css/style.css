@@ -2689,6 +2689,48 @@ body {
     color: #475569;
 }
 
+.doctor-day-header { cursor: pointer; user-select: none; }
+.doctor-day-chevron {
+    flex-shrink: 0;
+    color: #94a3b8;
+    transition: transform 0.2s ease;
+}
+.doctor-day-header.day-collapsed .doctor-day-chevron { transform: rotate(-90deg); }
+.day-hidden { display: none !important; }
+
+.doctor-day-block.day-past .doctor-day-name { color: #475569; }
+.doctor-day-block.day-past .doctor-day-header { background: #f1f5f9; }
+.doctor-day-past-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #94a3b8;
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 2px 8px;
+    border-radius: 12px;
+    vertical-align: middle;
+}
+
+.doctor-appt-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.doctor-appt-card.appt-done { border-left: 3px solid #22c55e; }
+.doctor-appt-done {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #dcfce7;
+    color: #16a34a;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
 /* ============================================
    INNER PAGES — SHARED
    ============================================ */
