@@ -556,6 +556,7 @@ def doctor_appointments(request):
             insurance = 'Unknown'
 
         grouped[key]['appointments'].append({
+            'id': appt.id,
             'patient_name': appt.patient_name,
             'patient_phone': appt.patient_phone,
             'time': f"{appt.hour:02d}:{appt.minute:02d}",
