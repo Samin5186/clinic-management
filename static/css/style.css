@@ -3293,6 +3293,22 @@ body {
 }
 .visit-col-stretch { min-height: 0; }
 .visit-col-stretch .visit-card { flex: 1; }
+.visit-card-flex {
+    display: flex;
+    flex-direction: column;
+}
+.visit-card-flex .visit-section-title { flex-shrink: 0; }
+.visit-card-flex .visit-meds-list {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+.visit-record-form {
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid #f1f5f9;
+    flex-shrink: 0;
+}
 .visit-col-full { width: 100%; }
 .visit-list-capped {
     max-height: 170px;

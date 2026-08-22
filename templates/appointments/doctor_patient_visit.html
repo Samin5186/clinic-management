@@ -203,12 +203,12 @@
                 </div>
 
                 <div class="visit-col visit-col-stretch">
-                    <div class="visit-card">
+                    <div class="visit-card visit-card-flex">
                         <h2 class="visit-section-title">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
                             Medical Records
                         </h2>
-                        <div class="visit-meds-list visit-list-capped">
+                        <div class="visit-meds-list">
                             {% for record in records %}
                             <div class="visit-med-item">
                                 <span class="visit-med-name">{{ record.title }}</span>
@@ -218,7 +218,7 @@
                             <p class="visit-empty-text">No records uploaded.</p>
                             {% endfor %}
                         </div>
-                        <form method="post" enctype="multipart/form-data" style="margin-top:8px; padding-top:8px; border-top:1px solid #f1f5f9;">
+                        <form method="post" enctype="multipart/form-data" class="visit-record-form">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="upload_record">
                             <div class="visit-upload-row">
