@@ -3273,6 +3273,25 @@ body {
     gap: 20px;
     align-items: start;
 }
+.visit-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.visit-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
+.visit-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.visit-col-full { width: 100%; }
 .visit-card {
     background: #fff;
     border: 1px solid #e2e8f0;
@@ -3549,6 +3568,7 @@ body {
 
 @media (max-width: 768px) {
     .visit-layout { grid-template-columns: 1fr; }
+    .visit-row { grid-template-columns: 1fr; }
     .visit-field-row { grid-template-columns: 1fr; }
     .visit-header { flex-direction: column; align-items: flex-start; }
     .visit-upload-row { flex-direction: column; align-items: stretch; }
