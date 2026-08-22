@@ -319,8 +319,13 @@ def appointment_book(request):
 
     patient = request.user.patient_profile
 
+    patient_insurances = patient.get_insurance_list()
+
     insurance_filter = request.GET.get('insurance', '')
-    if insurance_filter:
+    if insurance_filter == 'my_insurance' and patient_insurances:
+        all_doctors = Doctor.objects.all()
+        doctors = [d for d in all_doctors if any(ins in d.get_accepted_insurance_list() for ins in patient_insurances)]
+    elif insurance_filter and insurance_filter != 'my_insurance':
         all_doctors = Doctor.objects.all()
         doctors = [d for d in all_doctors if insurance_filter in d.get_accepted_insurance_list()]
     else:
@@ -467,6 +472,7 @@ def appointment_book(request):
         'insurance_choices': INSURANCE_CHOICES,
         'insurance_filter': insurance_filter,
         'patient_insurance': patient.insurance,
+        'patient_insurances': patient_insurances,
     })
 
 
