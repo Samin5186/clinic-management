@@ -201,16 +201,14 @@
                         </form>
                     </div>
                 </div>
-            </div>
 
-            <div class="visit-row">
-                <div class="visit-col-full">
+                <div class="visit-col">
                     <div class="visit-card">
                         <h2 class="visit-section-title">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
                             Medical Records
                         </h2>
-                        <div class="visit-meds-list">
+                        <div class="visit-meds-list visit-list-capped">
                             {% for record in records %}
                             <div class="visit-med-item">
                                 <span class="visit-med-name">{{ record.title }}</span>
