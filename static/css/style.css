@@ -1086,18 +1086,6 @@ body {
     transform: none;
 }
 
-.our-doctors-fab:hover {
-    width: 190px;
-    transform: scale(1.04);
-    animation: fabPulseBlue 1.6s ease-in-out infinite;
-}
-
-.our-doctors-fab:hover .fab-label {
-    max-width: 140px;
-    opacity: 1;
-    margin-left: 12px;
-}
-
 .health-tips-fab:hover {
     width: 175px;
     transform: scale(1.04);
@@ -1411,33 +1399,48 @@ body {
     position: fixed;
     bottom: 32px;
     left: 32px;
-    z-index: 999;
+    z-index: 1001;
     pointer-events: none;
 }
 
 .our-doctors-fab {
     pointer-events: auto;
-    width: 64px;
-    min-width: 64px;
-    height: 64px;
+    width: 68px;
+    min-width: 68px;
+    height: 68px;
     border-radius: 100px;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    border: none;
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45), 0 0 0 0 rgba(59, 130, 246, 0.4);
     color: white;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 0 19px;
+    padding: 0 20px;
     gap: 0;
     overflow: hidden;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    animation: doctorsFabGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes doctorsFabGlow {
+    0%, 100% { box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45), 0 0 0 0 rgba(59, 130, 246, 0.4); }
+    50% { box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45), 0 0 0 10px rgba(59, 130, 246, 0); }
 }
 
 .our-doctors-fab:hover {
     box-shadow: 0 12px 32px rgba(59, 130, 246, 0.5);
+    width: 190px;
+    transform: scale(1.04);
+    animation: fabPulseBlue 1.6s ease-in-out infinite;
+}
+
+.our-doctors-fab:hover .fab-label {
+    max-width: 140px;
+    opacity: 1;
+    margin-left: 12px;
 }
 
 .our-doctors-fab:focus-visible {
