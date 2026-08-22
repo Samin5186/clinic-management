@@ -1002,11 +1002,15 @@ def doctor_patient_visit(request, appointment_id):
 
     patient = appointment.patient
 
-    visit, _ = PatientVisit.objects.get_or_create(
+    visit, created = PatientVisit.objects.get_or_create(
         appointment=appointment,
         doctor=doctor,
         patient=patient,
-        defaults={'blood_type': '', 'allergies': '', 'disease_history': ''},
+        defaults={
+            'blood_type': patient.blood_type,
+            'allergies': patient.allergies,
+            'disease_history': patient.disease_history,
+        },
     )
 
     past_visits = PatientVisit.objects.filter(
@@ -1020,11 +1024,19 @@ def doctor_patient_visit(request, appointment_id):
         action = request.POST.get('action', '')
 
         if action == 'save_info':
-            visit.blood_type = request.POST.get('blood_type', '').strip()
-            visit.allergies = request.POST.get('allergies', '').strip()
-            visit.disease_history = request.POST.get('disease_history', '').strip()
-            visit.notes = request.POST.get('notes', '').strip()
+            blood = request.POST.get('blood_type', '').strip()
+            allerg = request.POST.get('allergies', '').strip()
+            disease = request.POST.get('disease_history', '').strip()
+            notes = request.POST.get('notes', '').strip()
+            visit.blood_type = blood
+            visit.allergies = allerg
+            visit.disease_history = disease
+            visit.notes = notes
             visit.save()
+            patient.blood_type = blood
+            patient.allergies = allerg
+            patient.disease_history = disease
+            patient.save()
             messages.success(request, 'Patient info saved.')
 
         elif action == 'upload_record':
@@ -1046,16 +1058,30 @@ def doctor_patient_visit(request, appointment_id):
                 messages.error(request, 'Enter prescription text or upload a file.')
 
         elif action == 'mark_visited':
+            blood = request.POST.get('blood_type', visit.blood_type).strip()
+            allerg = request.POST.get('allergies', visit.allergies).strip()
+            disease = request.POST.get('disease_history', visit.disease_history).strip()
+            notes = request.POST.get('notes', visit.notes).strip()
+            visit.blood_type = blood
+            visit.allergies = allerg
+            visit.disease_history = disease
+            visit.notes = notes
             visit.is_completed = True
             from django.utils import timezone as tz
             visit.visited_at = tz.now()
-            visit.blood_type = request.POST.get('blood_type', visit.blood_type).strip()
-            visit.allergies = request.POST.get('allergies', visit.allergies).strip()
-            visit.disease_history = request.POST.get('disease_history', visit.disease_history).strip()
-            visit.notes = request.POST.get('notes', visit.notes).strip()
             visit.save()
+            patient.blood_type = blood
+            patient.allergies = allerg
+            patient.disease_history = disease
+            patient.save()
             messages.success(request, f'Visit with {patient.full_name} marked as completed.')
             return redirect('doctor_appointments')
+
+        elif action == 'undo_visit':
+            visit.is_completed = False
+            visit.visited_at = None
+            visit.save()
+            messages.success(request, 'Visit uncompleted. You can continue editing.')
 
         return redirect('doctor_patient_visit', appointment_id=appointment_id)
 

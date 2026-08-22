@@ -75,6 +75,9 @@ class Patient(models.Model):
     email_encrypted = models.TextField(unique=True)
     password_hash = models.CharField(max_length=128, default='')
     insurance = models.CharField(max_length=500, default='', blank=True, help_text='Comma-separated insurance keys')
+    blood_type = models.CharField(max_length=5, default='', blank=True)
+    allergies = models.TextField(default='', blank=True)
+    disease_history = models.TextField(default='', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property

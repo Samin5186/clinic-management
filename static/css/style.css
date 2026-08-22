@@ -3506,16 +3506,45 @@ body {
     color: #94a3b8;
 }
 
-/* Complete visit */
-.visit-complete-text {
-    font-size: 0.88rem;
-    color: #64748b;
-    margin: 0 0 12px;
+/* Complete visit compact box */
+.visit-complete-box {
+    background: #f0f4ff;
+    border: 2px solid #1e3a8a;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+}
+.visit-complete-box-done {
+    background: #f0fdf4;
+    border-color: #16a34a;
+}
+.visit-complete-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #1e3a8a;
+}
+.visit-complete-box-done .visit-complete-top { color: #16a34a; }
+.visit-complete-sub {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin: 4px 0 0;
 }
 .visit-complete-btn {
+    margin-top: 8px;
     width: 100%;
     justify-content: center;
 }
+.visit-undo-btn {
+    color: #dc2626;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.visit-undo-btn:hover { color: #991b1b; background: #fef2f2; }
 
 @media (max-width: 768px) {
     .visit-layout { grid-template-columns: 1fr; }
