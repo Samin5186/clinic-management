@@ -123,8 +123,7 @@
                 <p>Expert care across medical specialties — from common illnesses to chronic conditions</p>
             </div>
             <div class="conditions-tabs" role="tablist" aria-label="Condition categories">
-                <button class="tab-btn active" role="tab" aria-selected="true" data-tab="all">All</button>
-                <button class="tab-btn" role="tab" aria-selected="false" data-tab="common">Common</button>
+                <button class="tab-btn active" role="tab" aria-selected="true" data-tab="common">Common</button>
                 <button class="tab-btn" role="tab" aria-selected="false" data-tab="chronic">Chronic</button>
                 <button class="tab-btn" role="tab" aria-selected="false" data-tab="mental">Mental Health</button>
                 <button class="tab-btn" role="tab" aria-selected="false" data-tab="respiratory">Respiratory</button>
@@ -527,9 +526,9 @@ const CONDITIONS = [
     { id: 'asthma', name: 'Asthma & Breathing', desc: 'Respiratory care and inhaler management', category: 'respiratory', icon: '🫁', color: 'sky' },
 ];
 
-function renderConditions(filter = 'all') {
+function renderConditions(filter = 'common') {
     const grid = document.getElementById('conditionsGrid');
-    const filtered = filter === 'all' ? CONDITIONS : CONDITIONS.filter(c => c.category === filter);
+    const filtered = CONDITIONS.filter(c => c.category === filter);
 
     grid.innerHTML = filtered.map(c => `
         <article class="condition-card ${c.color}" data-category="${c.category}">
@@ -558,7 +557,7 @@ function initTabs() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderConditions('all');
+    renderConditions('common');
     initTabs();
 
     // Health Tips Modal
