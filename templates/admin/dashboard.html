@@ -42,7 +42,9 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Specialty</th>
                     <th>Medical Number</th>
+                    <th>Accepted Insurance</th>
                     <th>Appointments</th>
                     <th>Actions</th>
                 </tr>
@@ -51,7 +53,9 @@
                 {% for doc in doctors %}
                 <tr>
                     <td class="truncated" title="Dr. {{ doc.name }}">Dr. {{ doc.name }}</td>
+                    <td><span class="badge specialty-badge">{{ doc.specialty }}</span></td>
                     <td>{{ doc.medical_number }}</td>
+                    <td class="truncated" title="{{ doc.get_accepted_insurance_display }}" style="font-size:0.82rem; max-width:200px;">{{ doc.get_accepted_insurance_display }}</td>
                     <td><span class="badge">{{ doc.appointments.filter.count }}</span></td>
                     <td>
                         <form method="post" action="{% url 'admin_remove_user' %}" style="display:inline">
@@ -108,12 +112,14 @@
             <colgroup>
                 <col style="width:auto">
                 <col style="width:90px">
+                <col style="width:250px">
                 <col style="width:150px">
             </colgroup>
             <thead>
                 <tr>
                     <th>Username</th>
                     <th>Role</th>
+                    <th>Info</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -122,6 +128,16 @@
                 <tr>
                     <td class="truncated" title="{{ user.username }}">{{ user.username }}</td>
                     <td><span class="badge role-{{ user.role }}">{{ user.role }}</span></td>
+                    <td class="truncated" style="font-size:0.82rem;" title="
+                        {% if user.role == 'patient' and user.patient_profile %}Insurance: {{ user.patient_profile.get_insurance_display_name }}{% elif user.role == 'doctor' and user.doctor_profile %}Accepted: {{ user.doctor_profile.get_accepted_insurance_display }}{% endif %}">
+                        {% if user.role == 'patient' and user.patient_profile %}
+                            Insurance: {{ user.patient_profile.get_insurance_display_name }}
+                        {% elif user.role == 'doctor' and user.doctor_profile %}
+                            Accepted: {{ user.doctor_profile.get_accepted_insurance_display }}
+                        {% else %}
+                            &mdash;
+                        {% endif %}
+                    </td>
                     <td>
                         <div class="user-actions">
                             <form method="post" action="{% url 'admin_promote_user' %}">
