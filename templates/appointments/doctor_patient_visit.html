@@ -289,7 +289,8 @@ document.querySelectorAll('.visit-file-input').forEach(function(input) {
     if (!info || !side) return;
     function syncSide() {
         if (window.innerWidth <= 768) { side.style.height = ''; return; }
-        side.style.height = info.offsetHeight + 'px';
+        var h = Math.round(info.getBoundingClientRect().height);
+        if (h > 0) side.style.height = h + 'px';
     }
     syncSide();
     window.addEventListener('load', syncSide);
