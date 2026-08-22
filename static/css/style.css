@@ -3334,7 +3334,18 @@ body {
     flex-direction: column;
     gap: 16px;
 }
-.visit-col-fixed { min-height: 0; overflow: hidden; }
+.visit-col-fixed { min-height: 0; }
+.visit-side-wrap {
+    position: relative;
+    min-width: 0;
+}
+.visit-side-wrap .visit-col-fixed {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
 .visit-col-fixed .visit-card {
     flex: 1;
     display: flex;
@@ -3661,6 +3672,7 @@ body {
     .visit-layout { grid-template-columns: 1fr; }
     .visit-grid { grid-template-columns: 1fr; }
     .visit-row { display: flex; flex-direction: column; gap: 16px; }
+    .visit-side-wrap .visit-col-fixed { position: static; }
     .visit-field-row { grid-template-columns: 1fr; }
     .visit-header { flex-direction: column; align-items: flex-start; }
     .visit-upload-row { flex-direction: column; align-items: stretch; }
