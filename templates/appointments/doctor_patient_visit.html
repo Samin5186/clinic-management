@@ -294,6 +294,8 @@ document.querySelectorAll('.visit-file-input').forEach(function(input) {
     syncSide();
     window.addEventListener('load', syncSide);
     window.addEventListener('resize', syncSide);
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(syncSide); }
+    if (window.ResizeObserver) { new ResizeObserver(syncSide).observe(info); }
 })();
 </script>
 {% endblock %}
