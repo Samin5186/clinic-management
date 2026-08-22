@@ -43,7 +43,7 @@
             <div class="doctor-day-block{% if day.is_past %} day-past{% endif %}">
                 <div class="doctor-day-header{% if not day.is_today %} day-collapsed{% endif %}" onclick="toggleDay(this)">
                     <svg class="doctor-day-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-                    <div class="doctor-day-name">{{ day.day_name }}{% if day.is_past %} <span class="doctor-day-past-tag">Past</span>{% endif %}</div>
+                    <div class="doctor-day-name">{{ day.day_name }}{% if day.is_today %} <span class="doctor-day-today-tag">Today</span>{% endif %}{% if day.is_past %} <span class="doctor-day-past-tag">Past</span>{% endif %}</div>
                     <div class="doctor-day-date">{{ day.display }}</div>
                     <div class="doctor-day-count">
                         {{ day.appointments|length }} appointment{{ day.appointments|length|pluralize }}

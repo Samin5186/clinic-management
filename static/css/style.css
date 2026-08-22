@@ -2710,6 +2710,16 @@ body {
     border-radius: 12px;
     vertical-align: middle;
 }
+.doctor-day-today-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #1e40af;
+    background: #dbeafe;
+    border: 1px solid #bfdbfe;
+    padding: 2px 8px;
+    border-radius: 12px;
+    vertical-align: middle;
+}
 
 .doctor-appt-name-row {
     display: flex;

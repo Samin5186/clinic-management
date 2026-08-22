@@ -570,7 +570,12 @@ def doctor_appointments(request):
             'is_completed': is_completed,
         })
 
-    today = dt_date.today()
+    try:
+        import zoneinfo
+        tehran = zoneinfo.ZoneInfo('Asia/Tehran')
+        today = timezone.now().astimezone(tehran).date()
+    except Exception:
+        today = dt_date.today()
     for g in grouped.values():
         g['is_past'] = bool(g['date'] and g['date'] < today)
         g['is_today'] = bool(g['date'] and g['date'] == today)
