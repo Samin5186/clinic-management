@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
 from django.urls import reverse
 from datetime import date, timedelta
-from .models import User, Doctor, Patient, Appointment, Medication, HealthReading, INSURANCE_CHOICES
+from .models import User, Doctor, Patient, Appointment, Medication, HealthReading, INSURANCE_CHOICES, PatientVisit, MedicalRecord, Prescription
 import logging
 import json
 
