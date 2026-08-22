@@ -23,13 +23,10 @@
         <form method="get" class="login-form" style="margin-bottom:20px;">
             <div class="form-group">
                 <select name="insurance" onchange="this.form.submit()" style="width:100%; padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px; font-size:1rem; font-family:inherit; background:#fafbfc; cursor:pointer;">
-                    <option value="">All Insurance Types</option>
+                    <option value="">All Insurance</option>
                     {% if patient_insurances %}
-                    <option value="my_insurance" {% if insurance_filter == 'my_insurance' %}selected{% endif %}>My Insurance ({{ patient_insurances|length }})</option>
+                    <option value="my_insurance" {% if insurance_filter == 'my_insurance' %}selected{% endif %}>My Insurance</option>
                     {% endif %}
-                    {% for value, label in insurance_choices %}
-                    <option value="{{ value }}" {% if value == insurance_filter %}selected{% endif %}>{{ label }}</option>
-                    {% endfor %}
                 </select>
             </div>
         </form>
