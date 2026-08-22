@@ -3333,6 +3333,20 @@ body {
     flex-direction: column;
     gap: 16px;
 }
+.visit-col-fixed { min-height: 0; }
+.visit-col-fixed .visit-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.visit-col-fixed .visit-section-title { flex-shrink: 0; }
+.visit-col-fixed .visit-meds-list,
+.visit-col-fixed .visit-readings-list {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
 .visit-col-stretch { min-height: 0; }
 .visit-col-stretch .visit-card { flex: 1; }
 .visit-card-flex {
