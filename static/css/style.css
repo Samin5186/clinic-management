@@ -3264,6 +3264,9 @@ body {
     font-size: 0.8rem;
     font-weight: 600;
 }
+.visit-header-complete-form {
+    margin-left: auto;
+}
 
 .visit-layout {
     max-width: 1000px;
