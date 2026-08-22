@@ -74,7 +74,7 @@ class Patient(models.Model):
     phone_encrypted = models.TextField(unique=True)
     email_encrypted = models.TextField(unique=True)
     password_hash = models.CharField(max_length=128, default='')
-    insurance = models.CharField(max_length=30, choices=INSURANCE_CHOICES)
+    insurance = models.CharField(max_length=500, default='', blank=True, help_text='Comma-separated insurance keys')
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -131,7 +131,15 @@ class Patient(models.Model):
         }
         if not self.insurance:
             return 'No Insurance'
-        return insurance_names.get(self.insurance, self.insurance)
+        items = [i.strip() for i in self.insurance.split(',') if i.strip()]
+        if not items:
+            return 'No Insurance'
+        return ', '.join([insurance_names.get(i, i) for i in items])
+
+    def get_insurance_list(self):
+        if not self.insurance:
+            return []
+        return [i.strip() for i in self.insurance.split(',') if i.strip()]
 
     def __str__(self):
         return self.full_name

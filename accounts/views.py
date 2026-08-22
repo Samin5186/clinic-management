@@ -208,7 +208,8 @@ def register_patient(request):
         age = request.POST.get('age', '').strip()
         phone = request.POST.get('phone', '').strip()
         email = request.POST.get('email', '').strip()
-        insurance = request.POST.get('insurance', '').strip()
+        insurance_list = request.POST.getlist('insurance')
+        insurance = ','.join(insurance_list)
         password1 = request.POST.get('password1', '').strip()
         password2 = request.POST.get('password2', '').strip()
 
@@ -232,6 +233,8 @@ def register_patient(request):
             errors.append('Password must contain at least one letter.')
         if password1 != password2:
             errors.append('Passwords do not match.')
+        if not insurance_list:
+            errors.append('Please select at least one insurance provider.')
 
         if not errors:
             for p in Patient.objects.all():
@@ -247,7 +250,7 @@ def register_patient(request):
                 messages.error(request, e)
             return render(request, 'register.html', {
                 'insurance_choices': Patient.INSURANCE_CHOICES,
-                'form_data': request.POST,
+                'form_data': {'insurances': insurance_list, 'first_name': first_name, 'last_name': last_name, 'age': age, 'phone': phone, 'email': email},
             })
 
         base_username = first_name.lower().replace(' ', '')

@@ -39,13 +39,17 @@
             <input type="email" autocomplete="off" id="email" name="email" required placeholder="email@example.com" value="{{ form_data.email|default:'' }}">
         </div>
         <div class="form-group">
-            <label for="insurance">Insurance</label>
-            <select id="insurance" name="insurance" required>
-                <option value="">Select Insurance</option>
+            <label>Insurance (select all that apply)</label>
+            <div class="insurance-checkbox-grid">
                 {% for value, label in insurance_choices %}
-                <option value="{{ value }}" {% if form_data.insurance == value %}selected{% endif %}>{{ label }}</option>
+                <label class="insurance-checkbox-item">
+                    <input type="checkbox" name="insurance" value="{{ value }}" class="insurance-cb"
+                        {% if value in form_data.insurances %}checked{% endif %}>
+                    <span class="insurance-checkmark"></span>
+                    {{ label }}
+                </label>
                 {% endfor %}
-            </select>
+            </div>
         </div>
         <div class="form-group">
             <label for="password1">Password</label>

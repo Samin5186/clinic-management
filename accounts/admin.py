@@ -15,3 +15,4 @@ class DoctorAdmin(admin.ModelAdmin):
 @admin.register(Patient)
 class PatientAdmin(admin.ModelAdmin):
     list_display = ['insurance']
+    readonly_fields = ['created_at']

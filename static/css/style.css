@@ -1917,6 +1917,49 @@ body {
     color: #94a3b8;
 }
 
+.insurance-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fafbfc;
+}
+
+.insurance-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #334155;
+    transition: background 0.2s ease;
+    user-select: none;
+}
+
+.insurance-checkbox-item:hover {
+    background: #eef2ff;
+}
+
+.insurance-checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #2563eb;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.insurance-checkbox-item:has(input:checked) {
+    background: #eff6ff;
+    color: #1e40af;
+    font-weight: 600;
+}
+
 .form-group input:disabled,
 .form-group select:disabled {
     background: #f1f5f9;
@@ -3137,6 +3180,7 @@ body {
     /* Form groups */
     .form-group label { font-size: 0.85rem; }
     .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; font-size: 0.9rem; width: 100%; box-sizing: border-box; }
+    .insurance-checkbox-grid { grid-template-columns: 1fr; max-height: 180px; }
 
     /* Login form */
     .login-form { padding: 0; }
