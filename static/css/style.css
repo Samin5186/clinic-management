@@ -1028,8 +1028,9 @@ body {
 .health-tips-fab {
     pointer-events: auto;
     width: 64px;
+    min-width: 64px;
     height: 64px;
-    border-radius: 50%;
+    border-radius: 100px;
     background: linear-gradient(135deg, #10b981, #059669);
     border: none;
     box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
@@ -1037,13 +1038,15 @@ body {
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    justify-content: flex-start;
+    padding: 0 19px;
+    gap: 0;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
 .health-tips-fab:hover {
-    transform: scale(1.1) rotate(5deg);
     box-shadow: 0 12px 32px rgba(16, 185, 129, 0.5);
 }
 
@@ -1062,38 +1065,59 @@ body {
 }
 
 .fab-tooltip {
-    position: absolute;
-    right: calc(100% + 12px);
-    top: 50%;
-    transform: translateY(-50%);
-    background: #1e3a8a;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    white-space: nowrap;
+    display: none;
+}
+
+/* Pill-expanding FAB labels */
+.health-tips-fab .fab-label,
+.our-doctors-fab .fab-label {
+    max-width: 0;
     opacity: 0;
-    visibility: hidden;
-    transform: translateY(-50%) translateX(10px);
-    transition: all 0.25s ease;
+    white-space: nowrap;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin-left 0.35s ease;
     pointer-events: none;
 }
 
-.fab-tooltip::after {
-    content: '';
-    position: absolute;
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    border: 6px solid transparent;
-    border-left-color: #1e3a8a;
+.health-tips-fab:hover .fab-icon,
+.our-doctors-fab:hover .fab-icon {
+    transform: none;
 }
 
-.health-tips-fab:hover .fab-tooltip {
+.our-doctors-fab:hover {
+    width: 190px;
+    transform: scale(1.04);
+    animation: fabPulseBlue 1.6s ease-in-out infinite;
+}
+
+.our-doctors-fab:hover .fab-label {
+    max-width: 140px;
     opacity: 1;
-    visibility: visible;
-    transform: translateY(-50%) translateX(0);
+    margin-left: 12px;
+}
+
+.health-tips-fab:hover {
+    width: 175px;
+    transform: scale(1.04);
+    animation: fabPulseGreen 1.6s ease-in-out infinite;
+}
+
+.health-tips-fab:hover .fab-label {
+    max-width: 120px;
+    opacity: 1;
+    margin-left: 12px;
+}
+
+@keyframes fabPulseBlue {
+    0%, 100% { box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45); }
+    50% { box-shadow: 0 8px 32px rgba(59, 130, 246, 0.75); }
+}
+
+@keyframes fabPulseGreen {
+    0%, 100% { box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45); }
+    50% { box-shadow: 0 8px 32px rgba(16, 185, 129, 0.75); }
 }
 
 .health-tips-modal {
@@ -1394,8 +1418,9 @@ body {
 .our-doctors-fab {
     pointer-events: auto;
     width: 64px;
+    min-width: 64px;
     height: 64px;
-    border-radius: 50%;
+    border-radius: 100px;
     background: linear-gradient(135deg, #3b82f6, #2563eb);
     border: none;
     box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
@@ -1403,13 +1428,15 @@ body {
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    justify-content: flex-start;
+    padding: 0 19px;
+    gap: 0;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
 .our-doctors-fab:hover {
-    transform: scale(1.1) rotate(-5deg);
     box-shadow: 0 12px 32px rgba(59, 130, 246, 0.5);
 }
 
@@ -1425,41 +1452,6 @@ body {
 
 .our-doctors-fab[aria-expanded="true"]:hover {
     box-shadow: 0 12px 32px rgba(239, 68, 68, 0.5);
-}
-
-.our-doctors-fab .fab-tooltip {
-    position: absolute;
-    left: calc(100% + 12px);
-    top: 50%;
-    transform: translateY(-50%) translateX(-10px);
-    background: #1e3a8a;
-    color: white;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.25s ease;
-    pointer-events: none;
-    z-index: 1001;
-}
-
-.our-doctors-fab .fab-tooltip::after {
-    content: '';
-    position: absolute;
-    right: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    border: 6px solid transparent;
-    border-right-color: #1e3a8a;
-}
-
-.our-doctors-fab:hover .fab-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(-50%) translateX(0);
 }
 
 .our-doctors-modal {
