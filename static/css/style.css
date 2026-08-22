@@ -3274,17 +3274,14 @@ body {
     align-items: start;
 }
 .visit-grid {
-    max-width: 1200px;
+    max-width: 1150px;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 340px;
     gap: 20px;
 }
 .visit-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    align-items: stretch;
+    display: contents;
 }
 .visit-col {
     display: flex;
@@ -3568,7 +3565,8 @@ body {
 
 @media (max-width: 768px) {
     .visit-layout { grid-template-columns: 1fr; }
-    .visit-row { grid-template-columns: 1fr; }
+    .visit-grid { grid-template-columns: 1fr; }
+    .visit-row { display: flex; flex-direction: column; gap: 16px; }
     .visit-field-row { grid-template-columns: 1fr; }
     .visit-header { flex-direction: column; align-items: flex-start; }
     .visit-upload-row { flex-direction: column; align-items: stretch; }
