@@ -3580,13 +3580,25 @@ body {
     justify-content: center;
 }
 .visit-undo-btn {
-    color: #dc2626;
-    font-weight: 600;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    padding: 5px 14px;
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+    background: #eff6ff;
+    color: #1e40af;
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: all 0.15s ease;
 }
-.visit-undo-btn:hover { color: #991b1b; background: #fef2f2; }
+.visit-undo-btn:hover {
+    background: #1e3a8a;
+    border-color: #1e3a8a;
+    color: white;
+    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);
+    transform: translateY(-1px);
+}
 
 @media (max-width: 768px) {
     .visit-layout { grid-template-columns: 1fr; }
