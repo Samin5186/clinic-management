@@ -3291,6 +3291,8 @@ body {
     flex-direction: column;
     gap: 16px;
 }
+.visit-col-stretch { min-height: 0; }
+.visit-col-stretch .visit-card { flex: 1; }
 .visit-col-full { width: 100%; }
 .visit-list-capped {
     max-height: 170px;
