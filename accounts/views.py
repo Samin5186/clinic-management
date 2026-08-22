@@ -321,15 +321,20 @@ def appointment_book(request):
 
     patient_insurances = patient.get_insurance_list()
 
+    specialty_filter = request.GET.get('specialty', '')
     insurance_filter = request.GET.get('insurance', '')
+
+    doctors = list(Doctor.objects.all())
+
+    if specialty_filter:
+        doctors = [d for d in doctors if d.specialty.lower() == specialty_filter.lower()]
+
     if insurance_filter == 'my_insurance' and patient_insurances:
-        all_doctors = Doctor.objects.all()
-        doctors = [d for d in all_doctors if any(ins in d.get_accepted_insurance_list() for ins in patient_insurances)]
+        doctors = [d for d in doctors if any(ins in d.get_accepted_insurance_list() for ins in patient_insurances)]
     elif insurance_filter and insurance_filter != 'my_insurance':
-        all_doctors = Doctor.objects.all()
-        doctors = [d for d in all_doctors if insurance_filter in d.get_accepted_insurance_list()]
-    else:
-        doctors = Doctor.objects.all()
+        doctors = [d for d in doctors if insurance_filter in d.get_accepted_insurance_list()]
+
+    specialties = sorted(set(d.specialty for d in Doctor.objects.all()))
 
     selected_doctor = None
     booked_hours = []
@@ -473,6 +478,8 @@ def appointment_book(request):
         'insurance_filter': insurance_filter,
         'patient_insurance': patient.insurance,
         'patient_insurances': patient_insurances,
+        'specialties': specialties,
+        'specialty_filter': specialty_filter,
     })
 
 
