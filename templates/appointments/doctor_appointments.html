@@ -41,7 +41,7 @@
         <div class="doctor-schedule">
             {% for day in grouped_days %}
             <div class="doctor-day-block{% if day.is_past %} day-past{% endif %}">
-                <div class="doctor-day-header{% if not day.is_today %} day-collapsed{% endif %}" onclick="toggleDay(this)">
+                <div class="doctor-day-header{% if not day.is_open %} day-collapsed{% endif %}" onclick="toggleDay(this)">
                     <svg class="doctor-day-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
                     <div class="doctor-day-name">{{ day.day_name }}{% if day.is_today %} <span class="doctor-day-today-tag">Today</span>{% endif %}{% if day.is_past %} <span class="doctor-day-past-tag">Past</span>{% endif %}</div>
                     <div class="doctor-day-date">{{ day.display }}</div>
@@ -50,7 +50,7 @@
                         {% if day.done_count %}&middot; {{ day.done_count }} done{% endif %}
                     </div>
                 </div>
-                <div class="doctor-appt-list{% if not day.is_today %} day-hidden{% endif %}">
+                <div class="doctor-appt-list{% if not day.is_open %} day-hidden{% endif %}">
                     {% for appt in day.appointments %}
                     <a href="{% url 'doctor_patient_visit' appt.id %}" class="doctor-appt-card doctor-appt-link{% if appt.is_completed %} appt-done{% endif %}">
                         <div class="doctor-appt-time">
