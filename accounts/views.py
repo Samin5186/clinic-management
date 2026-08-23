@@ -1043,6 +1043,16 @@ def doctor_patient_visit(request, appointment_id):
     medications = Medication.objects.filter(patient=patient)
     health_readings = HealthReading.objects.filter(patient=patient).order_by('-created_at')[:20]
 
+    readings_chart = []
+    for r in HealthReading.objects.filter(patient=patient).order_by('year', 'month', 'day', 'hour')[:40]:
+        entry = {'t': r.reading_type, 'l': f"{r.month}/{r.day}"}
+        if r.reading_type == 'blood_pressure':
+            entry['a'] = r.systolic
+            entry['b'] = r.diastolic
+        else:
+            entry['v'] = r.value
+        readings_chart.append(entry)
+
     if request.method == 'POST':
         action = request.POST.get('action', '')
 
@@ -1119,6 +1129,7 @@ def doctor_patient_visit(request, appointment_id):
         'past_visits': past_visits,
         'medications': medications,
         'health_readings': health_readings,
+        'readings_chart': readings_chart,
         'records': records,
         'prescriptions': prescriptions,
     })

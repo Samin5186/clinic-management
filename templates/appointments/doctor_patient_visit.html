@@ -139,10 +139,18 @@
                         </div>
 
                         <div class="visit-card">
-                            <h2 class="visit-section-title">
+                            <h2 class="visit-section-title visit-title-row">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                                 Health Readings
+                                <button type="button" id="chartToggle" class="visit-chart-btn">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 3 5-6"/></svg>
+                                    Chart
+                                </button>
                             </h2>
+                            {{ readings_chart|json_script:"readings-chart-data" }}
+                            <div id="chartPanel" class="visit-chart-panel">
+                                <div id="readingsChart"></div>
+                            </div>
                             <div class="visit-readings-list">
                                 {% for r in health_readings %}
                                 <div class="visit-reading-item">
@@ -284,5 +292,94 @@ document.querySelectorAll('.visit-file-input').forEach(function(input) {
         }
     });
 });
+
+(function () {
+    var toggle = document.getElementById('chartToggle');
+    var panel = document.getElementById('chartPanel');
+    if (!toggle || !panel) return;
+    var rendered = false;
+
+    function svgEl(tag, attrs) {
+        var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (var k in attrs) e.setAttribute(k, attrs[k]);
+        return e;
+    }
+
+    function renderChart() {
+        var box = document.getElementById('readingsChart');
+        var raw = document.getElementById('readings-chart-data');
+        var data = raw ? JSON.parse(raw.textContent) : [];
+        box.innerHTML = '';
+        if (!data.length) { box.innerHTML = '<p class="visit-empty-text">No readings to chart yet.</p>'; return; }
+
+        var defs = [
+            { t: 'blood_pressure', f: 'a', name: 'Systolic', c: '#dc2626' },
+            { t: 'blood_pressure', f: 'b', name: 'Diastolic', c: '#2563eb' },
+            { t: 'blood_sugar', f: 'v', name: 'Blood Sugar', c: '#d97706' },
+            { t: 'heart_rate', f: 'v', name: 'Heart Rate', c: '#16a34a' }
+        ];
+        var W = 320, H = 150, L = 34, R = 10, T = 10, B = 24;
+        var vals = [];
+        data.forEach(function (d) { ['a', 'b', 'v'].forEach(function (k) { if (typeof d[k] === 'number') vals.push(d[k]); }); });
+        var lo = Math.min.apply(null, vals) - 5;
+        var hi = Math.max.apply(null, vals) + 5;
+        if (hi - lo < 10) { hi += 5; lo -= 5; }
+        function X(i) { return data.length === 1 ? (L + (W - L - R) / 2) : L + i * (W - L - R) / (data.length - 1); }
+        function Y(v) { return T + (H - T - B) * (1 - (v - lo) / (hi - lo)); }
+
+        var svg = svgEl('svg', { viewBox: '0 0 ' + W + ' ' + H, width: '100%' });
+        [lo, (lo + hi) / 2, hi].forEach(function (v) {
+            svg.appendChild(svgEl('line', { x1: L, y1: Y(v), x2: W - R, y2: Y(v), stroke: '#e2e8f0', 'stroke-width': 1 }));
+            var t = svgEl('text', { x: L - 5, y: Y(v) + 3, 'text-anchor': 'end', 'font-size': 8, fill: '#94a3b8' });
+            t.textContent = Math.round(v);
+            svg.appendChild(t);
+        });
+        var step = Math.ceil(data.length / 6);
+        data.forEach(function (d, i) {
+            if (i % step === 0 || i === data.length - 1) {
+                var t2 = svgEl('text', { x: X(i), y: H - 8, 'text-anchor': 'middle', 'font-size': 8, fill: '#94a3b8' });
+                t2.textContent = d.l;
+                svg.appendChild(t2);
+            }
+        });
+
+        var legend = {};
+        defs.forEach(function (s) {
+            var pts = [];
+            data.forEach(function (d, i) {
+                if (d.t === s.t && typeof d[s.f] === 'number') pts.push([X(i), Y(d[s.f]), d[s.f], d.l]);
+            });
+            if (!pts.length) return;
+            legend[s.name] = s.c;
+            svg.appendChild(svgEl('polyline', {
+                points: pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' '),
+                fill: 'none', stroke: s.c, 'stroke-width': 2, 'stroke-linejoin': 'round'
+            }));
+            pts.forEach(function (p) {
+                var c = svgEl('circle', { cx: p[0], cy: p[1], r: 2.6, fill: s.c });
+                var ti = svgEl('title', {});
+                ti.textContent = s.name + ': ' + p[2] + ' (' + p[3] + ')';
+                c.appendChild(ti);
+                svg.appendChild(c);
+            });
+        });
+        box.appendChild(svg);
+
+        var lg = document.createElement('div');
+        lg.className = 'visit-chart-legend';
+        Object.keys(legend).forEach(function (n) {
+            var sp = document.createElement('span');
+            sp.innerHTML = '<i class="visit-chart-dot" style="background:' + legend[n] + '"></i>' + n;
+            lg.appendChild(sp);
+        });
+        box.appendChild(lg);
+    }
+
+    toggle.addEventListener('click', function () {
+        var open = panel.classList.toggle('open');
+        toggle.classList.toggle('active', open);
+        if (open && !rendered) { rendered = true; renderChart(); }
+    });
+})();
 </script>
 {% endblock %}
