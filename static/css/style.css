@@ -3461,6 +3461,45 @@ body {
     border-radius: 50%;
     display: inline-block;
 }
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-weight: 600;
+    color: #334155;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+.btn-google:hover {
+    border-color: #1e3a8a;
+    box-shadow: 0 4px 14px rgba(30, 58, 138, 0.12);
+    transform: translateY(-1px);
+}
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 420px;
+    margin: 18px auto;
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
 .visit-col-full { width: 100%; }
 .visit-list-capped {
     max-height: 170px;

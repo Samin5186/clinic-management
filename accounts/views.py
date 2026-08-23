@@ -26,6 +26,80 @@ def home(request):
 
 
 @login_required
+def google_complete_profile(request):
+    if request.user.role != 'patient':
+        return redirect('home')
+    if hasattr(request.user, 'patient_profile'):
+        return redirect('patient_dashboard')
+
+    social = request.user.socialaccount_set.filter(provider='google').first()
+    extra = social.extra_data if social else {}
+    first_name = extra.get('given_name') or request.user.first_name or ''
+    last_name = extra.get('family_name') or request.user.last_name or ''
+    email = request.user.email or ''
+
+    form_data = {'first_name': first_name, 'last_name': last_name}
+
+    if request.method == 'POST':
+        errors = []
+        f = request.POST.get('first_name', '').strip()
+        l = request.POST.get('last_name', '').strip()
+        age_raw = request.POST.get('age', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        insurance = request.POST.getlist('insurance')
+
+        form_data.update({'first_name': f, 'last_name': l, 'age': age_raw, 'phone': phone})
+
+        if not f:
+            errors.append('First name is required.')
+        if not l:
+            errors.append('Last name is required.')
+        try:
+            age = int(age_raw)
+            if age < 1 or age > 120:
+                errors.append('Please enter a valid age.')
+        except ValueError:
+            age = None
+            errors.append('Please enter a valid age.')
+
+        import re as _re
+        if not _re.fullmatch(r'09\d{9}', phone):
+            errors.append('Phone must be 11 digits starting with 09.')
+
+        phone_taken = False
+        for p in Patient.objects.all():
+            try:
+                if p.phone == phone:
+                    phone_taken = True
+                    break
+            except Exception:
+                continue
+        if phone_taken:
+            errors.append('This phone number is already registered.')
+
+        if not errors:
+            patient = Patient(user=request.user)
+            patient.first_name = f
+            patient.last_name = l
+            patient.age = age
+            patient.phone = phone
+            patient.email = email
+            patient.insurance = ','.join(insurance)
+            patient.save()
+            messages.success(request, f'Welcome {f}! Your account is ready.')
+            return redirect('patient_dashboard')
+
+        for e in errors:
+            messages.error(request, e)
+
+    return render(request, 'google_complete_profile.html', {
+        'form_data': form_data,
+        'email': email,
+        'insurance_choices': INSURANCE_CHOICES,
+    })
+
+
+@login_required
 def patient_dashboard(request):
     logger.error("DASHBOARD DEBUG: user=%s, role=%s, is_authenticated=%s", request.user, getattr(request.user, 'role', 'NO ROLE'), request.user.is_authenticated)
     if request.user.role != 'patient':
@@ -80,6 +154,80 @@ def dashboard(request):
     elif request.user.is_admin_user:
         return redirect('admin_panel')
     return redirect('home')
+
+
+def google_complete_profile(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.user.role != 'patient':
+        return redirect('home')
+    if hasattr(request.user, 'patient_profile'):
+        return redirect('patient_dashboard')
+
+    social = request.user.socialaccount_set.filter(provider='google').first()
+    extra = social.extra_data if social else {}
+    g_first = extra.get('given_name') or request.user.first_name or ''
+    g_last = extra.get('family_name') or request.user.last_name or ''
+    g_email = request.user.email or ''
+
+    if request.method == 'POST':
+        errors = []
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        age_raw = request.POST.get('age', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        insurance = request.POST.getlist('insurance')
+
+        if not first_name:
+            errors.append('First name is required.')
+        if not last_name:
+            errors.append('Last name is required.')
+        try:
+            age = int(age_raw)
+            if age < 1 or age > 120:
+                errors.append('Age must be between 1 and 120.')
+        except ValueError:
+            age = 0
+            errors.append('Valid age is required.')
+        import re as _re
+        if not _re.fullmatch(r'09\d{9}', phone):
+            errors.append('Phone must be 11 digits starting with 09.')
+        else:
+            for p in Patient.objects.exclude(user=request.user):
+                try:
+                    if p.phone == phone:
+                        errors.append('This phone number is already registered.')
+                        break
+                except Exception:
+                    continue
+
+        if errors:
+            return render(request, 'google_complete_profile.html', {
+                'errors': errors,
+                'insurance_choices': INSURANCE_CHOICES,
+                'form_data': {
+                    'first_name': first_name, 'last_name': last_name,
+                    'age': age_raw, 'phone': phone, 'insurance': insurance,
+                },
+            })
+
+        patient = Patient(user=request.user)
+        patient.first_name = first_name
+        patient.last_name = last_name
+        patient.age = age
+        patient.phone = phone
+        patient.email = g_email
+        patient.insurance = ','.join(insurance)
+        patient.save()
+        messages.success(request, 'Profile completed. Welcome!')
+        return redirect('patient_dashboard')
+
+    return render(request, 'google_complete_profile.html', {
+        'insurance_choices': INSURANCE_CHOICES,
+        'g_first': g_first,
+        'g_last': g_last,
+        'g_email': g_email,
+    })
 
 
 def login_view(request):

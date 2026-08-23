@@ -6,7 +6,9 @@ urlpatterns = [
     path('dashboard/', views.patient_dashboard, name='patient_dashboard'),
     path('login/', views.login_view, name='login'),
     path('register/', views.register_patient, name='register'),
+    path('google/complete/', views.google_complete_profile, name='google_complete_profile'),
     path('logout/', views.logout_view, name='logout'),
+    path('google/complete-profile/', views.google_complete_profile, name='google_complete_profile'),
 
     # Patient appointment URLs
     path('appointments/', views.patient_appointments, name='patient_appointments'),
