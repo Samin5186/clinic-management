@@ -2720,6 +2720,23 @@ body {
     border-radius: 12px;
     vertical-align: middle;
 }
+.doctor-day-future-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #1d4ed8;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    padding: 2px 8px;
+    border-radius: 12px;
+    vertical-align: middle;
+}
+
+.doctor-day-block.day-past { border-left: 4px solid #94a3b8; }
+.doctor-day-block.day-today { border-left: 4px solid #16a34a; box-shadow: 0 2px 10px rgba(22, 163, 74, 0.08); }
+.doctor-day-block.day-future { border-left: 4px solid #2563eb; }
+.doctor-day-block.day-past .doctor-appt-card:not(.appt-done) { border-left: 3px solid #cbd5e1; }
+.doctor-day-block.day-today .doctor-appt-card:not(.appt-done) { border-left: 3px solid #16a34a; }
+.doctor-day-block.day-future .doctor-appt-card:not(.appt-done) { border-left: 3px solid #93c5fd; }
 
 .doctor-appt-name-row {
     display: flex;

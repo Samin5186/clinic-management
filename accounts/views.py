@@ -577,12 +577,11 @@ def doctor_appointments(request):
     except Exception:
         today = dt_date.today()
     valid_dates = [g['date'] for g in grouped.values() if g['date']]
-    default_key = None
-    if valid_dates:
-        default_key = today.isoformat() if today in valid_dates else max(valid_dates).isoformat()
+    default_key = today.isoformat() if today in valid_dates else None
 
     for key, g in grouped.items():
         g['is_past'] = bool(g['date'] and g['date'] < today)
+        g['is_today'] = bool(g['date'] and g['date'] == today)
         g['done_count'] = sum(1 for a in g['appointments'] if a['is_completed'])
         g['appointments'].sort(key=lambda a: a['time'], reverse=True)
         g['is_open'] = (key == default_key)
