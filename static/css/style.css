@@ -3420,7 +3420,7 @@ body {
     transition: max-height 0.25s ease;
 }
 .visit-chart-panel.open {
-    max-height: 280px;
+    max-height: 340px;
     overflow-y: auto;
 }
 .visit-chart-box { padding: 6px 0 2px; }

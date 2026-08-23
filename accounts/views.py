@@ -1045,7 +1045,7 @@ def doctor_patient_visit(request, appointment_id):
 
     readings_chart = []
     for r in HealthReading.objects.filter(patient=patient).order_by('year', 'month', 'day', 'hour')[:40]:
-        entry = {'t': r.reading_type, 'l': f"{r.month}/{r.day}"}
+        entry = {'t': r.reading_type, 'l': f"{r.year}/{r.month}/{r.day}"}
         if r.reading_type == 'blood_pressure':
             entry['a'] = r.systolic
             entry['b'] = r.diastolic

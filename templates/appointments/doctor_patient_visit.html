@@ -272,6 +272,7 @@
     </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.getElementById('markVisitedForm').addEventListener('submit', function(e) {
     var form = document.getElementById('patientInfoForm');
@@ -299,80 +300,93 @@ document.querySelectorAll('.visit-file-input').forEach(function(input) {
     if (!toggle || !panel) return;
     var rendered = false;
 
-    function svgEl(tag, attrs) {
-        var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (var k in attrs) e.setAttribute(k, attrs[k]);
-        return e;
-    }
-
     function renderChart() {
         var box = document.getElementById('readingsChart');
         var raw = document.getElementById('readings-chart-data');
-        var data = raw ? JSON.parse(raw.textContent) : [];
+        var readings = raw ? JSON.parse(raw.textContent) : [];
         box.innerHTML = '';
-        if (!data.length) { box.innerHTML = '<p class="visit-empty-text">No readings to chart yet.</p>'; return; }
+        if (!readings.length || typeof Chart === 'undefined') {
+            box.innerHTML = '<p class="visit-empty-text">No readings to chart yet.</p>';
+            return;
+        }
 
-        var defs = [
-            { t: 'blood_pressure', f: 'a', name: 'Systolic', c: '#dc2626' },
-            { t: 'blood_pressure', f: 'b', name: 'Diastolic', c: '#2563eb' },
-            { t: 'blood_sugar', f: 'v', name: 'Blood Sugar', c: '#d97706' },
-            { t: 'heart_rate', f: 'v', name: 'Heart Rate', c: '#16a34a' }
-        ];
-        var W = 320, H = 150, L = 34, R = 10, T = 10, B = 24;
-        var vals = [];
-        data.forEach(function (d) { ['a', 'b', 'v'].forEach(function (k) { if (typeof d[k] === 'number') vals.push(d[k]); }); });
-        var lo = Math.min.apply(null, vals) - 5;
-        var hi = Math.max.apply(null, vals) + 5;
-        if (hi - lo < 10) { hi += 5; lo -= 5; }
-        function X(i) { return data.length === 1 ? (L + (W - L - R) / 2) : L + i * (W - L - R) / (data.length - 1); }
-        function Y(v) { return T + (H - T - B) * (1 - (v - lo) / (hi - lo)); }
+        var labels = [...new Set(readings.map(r => r.l))];
 
-        var svg = svgEl('svg', { viewBox: '0 0 ' + W + ' ' + H, width: '100%' });
-        [lo, (lo + hi) / 2, hi].forEach(function (v) {
-            svg.appendChild(svgEl('line', { x1: L, y1: Y(v), x2: W - R, y2: Y(v), stroke: '#e2e8f0', 'stroke-width': 1 }));
-            var t = svgEl('text', { x: L - 5, y: Y(v) + 3, 'text-anchor': 'end', 'font-size': 8, fill: '#94a3b8' });
-            t.textContent = Math.round(v);
-            svg.appendChild(t);
-        });
-        var step = Math.ceil(data.length / 6);
-        data.forEach(function (d, i) {
-            if (i % step === 0 || i === data.length - 1) {
-                var t2 = svgEl('text', { x: X(i), y: H - 8, 'text-anchor': 'middle', 'font-size': 8, fill: '#94a3b8' });
-                t2.textContent = d.l;
-                svg.appendChild(t2);
-            }
-        });
-
-        var legend = {};
-        defs.forEach(function (s) {
-            var pts = [];
-            data.forEach(function (d, i) {
-                if (d.t === s.t && typeof d[s.f] === 'number') pts.push([X(i), Y(d[s.f]), d[s.f], d.l]);
+        function mapToLabels(filtered, getVal) {
+            return labels.map(l => {
+                const match = filtered.find(r => r.l === l);
+                return match ? getVal(match) : null;
             });
-            if (!pts.length) return;
-            legend[s.name] = s.c;
-            svg.appendChild(svgEl('polyline', {
-                points: pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' '),
-                fill: 'none', stroke: s.c, 'stroke-width': 2, 'stroke-linejoin': 'round'
-            }));
-            pts.forEach(function (p) {
-                var c = svgEl('circle', { cx: p[0], cy: p[1], r: 2.6, fill: s.c });
-                var ti = svgEl('title', {});
-                ti.textContent = s.name + ': ' + p[2] + ' (' + p[3] + ')';
-                c.appendChild(ti);
-                svg.appendChild(c);
-            });
-        });
-        box.appendChild(svg);
+        }
 
-        var lg = document.createElement('div');
-        lg.className = 'visit-chart-legend';
-        Object.keys(legend).forEach(function (n) {
-            var sp = document.createElement('span');
-            sp.innerHTML = '<i class="visit-chart-dot" style="background:' + legend[n] + '"></i>' + n;
-            lg.appendChild(sp);
-        });
-        box.appendChild(lg);
+        const bpReadings = readings.filter(r => r.t === 'blood_pressure');
+        const sugarReadings = readings.filter(r => r.t === 'blood_sugar');
+        const hrReadings = readings.filter(r => r.t === 'heart_rate');
+
+        const datasets = [];
+
+        if (bpReadings.length > 0) {
+            datasets.push({
+                label: 'Systolic BP',
+                data: mapToLabels(bpReadings, r => r.a),
+                borderColor: '#e53e3e',
+                backgroundColor: 'rgba(229, 62, 62, 0.1)',
+                tension: 0.1,
+                spanGaps: true
+            });
+            datasets.push({
+                label: 'Diastolic BP',
+                data: mapToLabels(bpReadings, r => r.b),
+                borderColor: '#3182ce',
+                backgroundColor: 'rgba(49, 130, 206, 0.1)',
+                tension: 0.1,
+                spanGaps: true
+            });
+        }
+
+        if (sugarReadings.length > 0) {
+            datasets.push({
+                label: 'Blood Sugar',
+                data: mapToLabels(sugarReadings, r => r.v),
+                borderColor: '#d69e2e',
+                backgroundColor: 'rgba(214, 158, 46, 0.1)',
+                tension: 0.1,
+                spanGaps: true
+            });
+        }
+
+        if (hrReadings.length > 0) {
+            datasets.push({
+                label: 'Heart Rate',
+                data: mapToLabels(hrReadings, r => r.v),
+                borderColor: '#38a169',
+                backgroundColor: 'rgba(56, 161, 105, 0.1)',
+                tension: 0.1,
+                spanGaps: true
+            });
+        }
+
+        if (datasets.length > 0) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 250;
+            box.appendChild(canvas);
+            new Chart(canvas.getContext('2d'), {
+                type: 'line',
+                data: { labels: labels, datasets: datasets },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: { display: true, text: 'Health Metrics Over Time' }
+                    },
+                    scales: {
+                        y: { beginAtZero: false }
+                    }
+                }
+            });
+        } else {
+            box.innerHTML = '<p class="visit-empty-text">No chartable readings yet.</p>';
+        }
     }
 
     toggle.addEventListener('click', function () {
